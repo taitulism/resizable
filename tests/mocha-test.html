@@ -7,15 +7,24 @@
 		<link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
 		<script src="../resizable.js"></script>
 		<style>
+			body {
+				margin: 0;
+			}
+			#test-dom-container {
+				height: 100vh;
+				width: 100vw;
+			}
 			#container {
 				height: 100%;
 				width: 100%;
 			}
-
 			#target {
-				width: 100px;
-				height: 100px;
 				background-color: pink;
+				position: relative;
+				height: 200px;
+				width: 200px;
+				top: calc(50% - 100px);
+				left: calc(50% - 100px);
 			}
 		</style>
 
@@ -29,7 +38,10 @@
 		<script src="http://unpkg.com/mocha/mocha.js"></script>
 
 		<script class="mocha-init">
-			mocha.setup('bdd');
+			mocha.setup({
+				ui: 'bdd',
+				timeout: 2000
+			});
 			mocha.checkLeaks();
 		</script>
 		<script src="index.spec.js"></script>

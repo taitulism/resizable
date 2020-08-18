@@ -41,7 +41,7 @@ function simulateMouseUp (elm, x, y) {
 }
 
 describe('resizable', () => {
-	let testDOMContainer, container, target;
+	let testDOMContainer, container, target, box;
 
 	before(() => {
 		testDOMContainer = document.getElementById('test-dom-container');
@@ -61,6 +61,8 @@ describe('resizable', () => {
 
 		container.appendChild(target);
 		testDOMContainer.appendChild(container);
+
+		box = target.getBoundingClientRect();
 	});
 
 	afterEach(() => {
@@ -69,6 +71,8 @@ describe('resizable', () => {
 
 		container.parentNode.removeChild(container);
 		container = null;
+
+		box = null;
 	});
 
 	after(() => {
@@ -115,9 +119,9 @@ describe('resizable', () => {
 			resizable(target);
 			expect(target.style.left).to.be.empty;
 
-			simulateMouseDown(target, 50, 50);
+			simulateMouseDown(target, box.x, box.y);
 
-			simulateMouseMove(target, 50, 50);
+			simulateMouseMove(target, box.x, box.y);
 			expect(target.style.left).to.equal('0px');
 
 			simulateMouseMove(target, 150, 50);
@@ -158,74 +162,53 @@ describe('resizable', () => {
 		});
 	});
 
-	describe.skip('events', () => {
-		it('emits `grab` event', () => {
-			const drg = resizable(target);
+	describe('events', () => {
+		it('emits `resizing` event', () => {
+			const rsz = resizable(target);
 			let fired = false;
 
-			drg.on('grab', (ev) => {
+			rsz.on('resizing', (ev) => {
 				fired = true;
 			});
 
-			simulateMouseDown(target, 50, 50);
+			simulateMouseDown(rsz.bottomRightGrip, box.x, box.y);
 
 			expect(fired).to.be.true;
 		});
 
-		it('emits `drop` event', () => {
-			const drg = resizable(target);
+		it('emits `newSize` event', () => {
+			const rsz = resizable(target);
 			let fired = false;
 
-			drg.on('drop', (ev) => {
+			rsz.on('newSize', (ev) => {
 				fired = true;
 			});
 
-			simulateMouseDown(target, 50, 50);
-			simulateMouseUp(target, 50, 50);
-
-			expect(fired).to.be.true;
-		});
-
-		it('emits `dragging` event', () => {
-			const drg = resizable(target);
-			let fired = false;
-
-			drg.on('dragging', (ev) => {
-				fired = true;
-			});
-
-			simulateMouseDown(target, 50, 50);
-			simulateMouseMove(target, 50, 50);
-			simulateMouseUp(target, 50, 50);
-
+			simulateMouseDown(rsz.bottomLeftGrip, box.x, box.y);
+			expect(fired).to.be.false;
+			simulateMouseDown(rsz.bottomLeftGrip, box.x-50, (box.y + box.height)+50);
+			expect(fired).to.be.false;
+			simulateMouseUp(rsz.bottomLeftGrip, box.x-50, (box.y + box.height)+50);
 			expect(fired).to.be.true;
 		});
 	});
 
-	describe.skip('classnames', () => {
+	describe('classnames', () => {
 		it('sets a `resizable` classname on elm', () => {
 			resizable(target);
 			expect(target.classList.contains('resizable')).to.be.true;
 		});
 
-		it('sets a `grabbed` classname on elm when grabbing it', () => {
-			resizable(target);
-			expect(target.classList.contains('grabbed')).to.be.false;
-			simulateMouseDown(target, 50, 50);
-			expect(target.classList.contains('grabbed')).to.be.true;
-			simulateMouseUp(target, 50, 50);
-			expect(target.classList.contains('grabbed')).to.be.false;
-		});
+		it('sets a `resizing` classname on elm when grabbing and moving a grip', () => {
+			const rsz = resizable(target);
 
-		it('sets a `dragging` classname on elm when moving it', () => {
-			resizable(target);
-			expect(target.classList.contains('dragging')).to.be.false;
-			simulateMouseDown(target, 50, 50);
-			expect(target.classList.contains('dragging')).to.be.false;
-			simulateMouseMove(target, 50, 50);
-			expect(target.classList.contains('dragging')).to.be.true;
-			simulateMouseUp(target, 50, 50);
-			expect(target.classList.contains('dragging')).to.be.false;
+			expect(target.classList.contains('resizing')).to.be.false;
+			simulateMouseDown(rsz.topLeftGrip, box.x, box.y);
+			expect(target.classList.contains('resizing')).to.be.true;
+			simulateMouseMove(rsz.topLeftGrip, box.x-50, box.y-50);
+			expect(target.classList.contains('resizing')).to.be.true;
+			simulateMouseUp(rsz.topLeftGrip, box.x-50, box.y-50);
+			expect(target.classList.contains('resizing')).to.be.false;
 		});
 	});
 
@@ -313,15 +296,15 @@ describe('resizable', () => {
 
 	describe.skip('destruction', () => {
 		it('removes all listeners', () => {
-			const drg = resizable(target);
+			const rsz = resizable(target);
 
 			let grabCount = 0;
 			let moveCount = 0;
 			let dropCount = 0;
 
-			drg.on('grab', () => { grabCount++; });
-			drg.on('dragging', () => { moveCount++; });
-			drg.on('drop', () => { dropCount++; });
+			rsz.on('grab', () => { grabCount++; });
+			rsz.on('dragging', () => { moveCount++; });
+			rsz.on('drop', () => { dropCount++; });
 
 			simulateMouseDown(target, 50, 50);
 			expect(grabCount).to.equal(1);
@@ -338,7 +321,7 @@ describe('resizable', () => {
 			simulateMouseMove(target, 160, 160);
 			expect(moveCount).to.equal(2);
 
-			drg.destroy();
+			rsz.destroy();
 
 			simulateMouseDown(target, 160, 160);
 			expect(grabCount).to.equal(1);
@@ -351,7 +334,7 @@ describe('resizable', () => {
 		});
 
 		it('removes all classnames', () => {
-			const drg = resizable(target);
+			const rsz = resizable(target);
 
 			simulateMouseDown(target, 50, 50);
 			simulateMouseMove(target, 50, 50);
@@ -359,7 +342,7 @@ describe('resizable', () => {
 			simulateMouseUp(target, 150, 150);
 			simulateMouseMove(target, 160, 160);
 
-			drg.destroy();
+			rsz.destroy();
 			expect(target.classList.contains('resizable')).to.be.false;
 
 			simulateMouseDown(target, 160, 160);
@@ -373,25 +356,25 @@ describe('resizable', () => {
 			target.style.position = 'static';
 
 			expect(target.style.position).to.equal('static');
-			const drg = resizable(target);
+			const rsz = resizable(target);
 
 			simulateMouseDown(target, 50, 50);
 			expect(target.style.position).to.equal('absolute');
-			drg.destroy();
+			rsz.destroy();
 			expect(target.style.position).to.equal('static');
 		});
 
 		it('releases the target element', () => {
-			const drg = resizable(target);
+			const rsz = resizable(target);
 
 			simulateMouseDown(target, 50, 50);
 			simulateMouseMove(target, 50, 50);
 			simulateMouseMove(target, 150, 150);
 			simulateMouseUp(target, 150, 150);
 
-			expect(drg.elm).to.deep.equal(target);
-			drg.destroy();
-			expect(drg.elm).to.be.null;
+			expect(rsz.elm).to.deep.equal(target);
+			rsz.destroy();
+			expect(rsz.elm).to.be.null;
 		});
 	});
 });

@@ -25,11 +25,14 @@ function Resizable(elm, opts = {}) {
 	this.elm = elm;
 	this.gripSize = 10;
 	this.gripOffset = this.gripSize / 2 * -1;
+	this.events = {resizing: [], newSize: []};
 
 	this.topLeftGrip = this.createGrip('top-left-grip');
 	this.topRightGrip = this.createGrip('top-right-grip');
 	this.bottomRightGrip = this.createGrip('bottom-right-grip');
 	this.bottomLeftGrip = this.createGrip('bottom-left-grip');
+
+	elm.classList.add('resizable');
 }
 
 Resizable.prototype.createGrip = function (className) {
@@ -62,6 +65,8 @@ Resizable.prototype.createGrip = function (className) {
 	}
 
 	this.elm.appendChild(grip);
+
+	return grip;
 };
 
 Resizable.prototype.on = function (eventName, callback) {
@@ -72,8 +77,11 @@ Resizable.prototype.onDragStart = function (ev) {
 	this.startMouseX = ev.clientX;
 	this.startMouseY = ev.clientY;
 
+	this.elm.classList.add('resizing');
+
 	this.bindDraggingHandler(ev.target.classList);
 	document.addEventListener('mouseup', this.onDrop);
+	this.events.resizing.forEach(cb => cb(ev));
 };
 
 Resizable.prototype.bindDraggingHandler = function (classList) {
@@ -133,6 +141,8 @@ Resizable.prototype.onDraggingBottomLeft = function (ev) {
 };
 
 Resizable.prototype.onDrop = function (ev) {
+	this.elm.classList.remove('resizing');
+
 	let gripHandler;
 	switch (this.boundDirection) {
 		case direction.topLeft:
@@ -157,6 +167,7 @@ Resizable.prototype.onDrop = function (ev) {
 
 	this.boundDirection = null;
 	this.box = this.elm.getBoundingClientRect();
+	this.events.newSize.forEach(cb => cb(ev));
 };
 
 Resizable.prototype.destroy = function () {
