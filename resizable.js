@@ -26,6 +26,7 @@ function Resizable(elm, opts = {}) {
 	this.gripSize = 10;
 	this.gripOffset = this.gripSize / 2 * -1;
 	this.events = {resizing: [], newSize: []};
+	this.originalPosition = elm.style.position || null;
 
 	this.topLeftGrip = this.createGrip('top-left-grip');
 	this.topRightGrip = this.createGrip('top-right-grip');
@@ -34,11 +35,13 @@ function Resizable(elm, opts = {}) {
 
 	const position = elm.style.position || window.getComputedStyle(elm).position;
 
+
 	if (position !== 'absolute') {
 		elm.style.position = 'absolute';
 		elm.style.top = this.box.top;
 		elm.style.left = this.box.left;
 	}
+
 
 	elm.classList.add('resizable');
 }
@@ -179,6 +182,16 @@ Resizable.prototype.onDrop = function (ev) {
 };
 
 Resizable.prototype.destroy = function () {
-	this.elm.removeEventListener('mousedown', this.onDragStart);
-	document.removeEventListener('mousemove', this.onDragging);
+	this.topLeftGrip.removeEventListener('mousedown', this.onDragStart);
+	this.topRightGrip.removeEventListener('mousedown', this.onDragStart);
+	this.bottomRightGrip.removeEventListener('mousedown', this.onDragStart);
+	this.bottomLeftGrip.removeEventListener('mousedown', this.onDragStart);
+
+	this.elm.classList.remove('resizable', 'resizing');
+	if (this.originalPosition) {
+		this.elm.style.position = this.originalPosition;
+	}
+
+	this.events = null;
+	this.elm = null;
 };

@@ -95,7 +95,7 @@ describe('resizable', () => {
 		expect(ctor.name).to.equal('Resizable');
 	});
 
-	describe('grips', () => {
+	describe('Grips', () => {
 		it('adds 4 grips to the target element', () => {
 			expect(target.children.length).to.equal(0);
 			resizable(target);
@@ -121,7 +121,7 @@ describe('resizable', () => {
 		});
 	});
 
-	describe('resizing', () => {
+	describe('Resizing', () => {
 		it('does\'nt change element position (all directions)');
 		it('does\'nt change element position', () => {
 			const {topRightGrip} = resizable(target);
@@ -410,7 +410,7 @@ describe('resizable', () => {
 		});
 	});
 
-	describe('events', () => {
+	describe('Events', () => {
 		it('emits `resizing` event', () => {
 			const rsz = resizable(target);
 			let fired = false;
@@ -441,7 +441,7 @@ describe('resizable', () => {
 		});
 	});
 
-	describe('classnames', () => {
+	describe('Classnames', () => {
 		it('sets a `resizable` classname on elm', () => {
 			resizable(target);
 			expect(target.classList.contains('resizable')).to.be.true;
@@ -480,7 +480,7 @@ describe('resizable', () => {
 		});
 	});
 
-	describe.skip('options', () => {
+	describe.skip('Options', () => {
 		describe('axis', () => {
 			it('restricts dragging along the X axis only', () => {
 				resizable(target, {axis: 'X'});
@@ -544,62 +544,62 @@ describe('resizable', () => {
 		});
 	});
 
-	describe.skip('destruction', () => {
+	describe('Destruction', () => {
 		it('removes all listeners', () => {
 			const rsz = resizable(target);
+			const {topRightGrip} = rsz;
 
-			let grabCount = 0;
-			let moveCount = 0;
-			let dropCount = 0;
+			let resizingCount = 0;
+			let newSizeCount = 0;
 
-			rsz.on('grab', () => { grabCount++; });
-			rsz.on('dragging', () => { moveCount++; });
-			rsz.on('drop', () => { dropCount++; });
+			rsz.on('resizing', () => { resizingCount++; });
+			rsz.on('newSize', () => { newSizeCount++; });
 
-			simulateMouseDown(target, 50, 50);
-			expect(grabCount).to.equal(1);
+			expect(resizingCount).to.equal(0);
+			simulateMouseDown(topRightGrip, box.x, box.y);
+			expect(resizingCount).to.equal(1);
 
-			simulateMouseMove(target, 50, 50);
-			expect(moveCount).to.equal(1);
+			simulateMouseMove(topRightGrip, box.x + 25, box.y - 25);
+			expect(resizingCount).to.equal(1);
 
-			simulateMouseMove(target, 150, 150);
-			expect(moveCount).to.equal(2);
+			// TODO: add event, see trello
+			// simulateMouseMove(topRightGrip, box.x + 50, box.y - 50);
+			// expect(resizingCount).to.equal(2);
 
-			simulateMouseUp(target, 150, 150);
-			expect(dropCount).to.equal(1);
+			expect(newSizeCount).to.equal(0);
+			simulateMouseUp(topRightGrip, box.x + 75, box.y - 75);
+			expect(newSizeCount).to.equal(1);
 
-			simulateMouseMove(target, 160, 160);
-			expect(moveCount).to.equal(2);
+			simulateMouseMove(topRightGrip, box.x + 100, box.y - 100);
+			expect(resizingCount).to.equal(1);
 
 			rsz.destroy();
 
-			simulateMouseDown(target, 160, 160);
-			expect(grabCount).to.equal(1);
+			simulateMouseDown(topRightGrip, box.x + 100, box.y - 100);
+			expect(resizingCount).to.equal(1);
 
-			simulateMouseMove(target, 160, 160);
-			expect(moveCount).to.equal(2);
+			simulateMouseMove(topRightGrip, box.x + 125, box.y - 125);
+			expect(resizingCount).to.equal(1);
 
-			simulateMouseUp(target, 160, 160);
-			expect(dropCount).to.equal(1);
+			simulateMouseUp(topRightGrip, box.x + 150, box.y - 150);
+			expect(newSizeCount).to.equal(1);
 		});
 
 		it('removes all classnames', () => {
 			const rsz = resizable(target);
+			const {topLeftGrip} = rsz;
 
-			simulateMouseDown(target, 50, 50);
-			simulateMouseMove(target, 50, 50);
-			simulateMouseMove(target, 150, 150);
-			simulateMouseUp(target, 150, 150);
-			simulateMouseMove(target, 160, 160);
+			simulateMouseDown(topLeftGrip, 25, 25);
+			simulateMouseMove(topLeftGrip, 25, 25);
+			simulateMouseMove(topLeftGrip, 50, 50);
+			simulateMouseUp(topLeftGrip, 50, 50);
+			simulateMouseMove(topLeftGrip, 75, 75);
 
 			rsz.destroy();
+			simulateMouseDown(target, 100, 100);
+			simulateMouseMove(target, 100, 100);
 			expect(target.classList.contains('resizable')).to.be.false;
-
-			simulateMouseDown(target, 160, 160);
-			expect(target.classList.contains('grabbed')).to.be.false;
-
-			simulateMouseMove(target, 160, 160);
-			expect(target.classList.contains('dragging')).to.be.false;
+			expect(target.classList.contains('resizing')).to.be.false;
 		});
 
 		it('resets original position', () => {
@@ -608,7 +608,6 @@ describe('resizable', () => {
 			expect(target.style.position).to.equal('static');
 			const rsz = resizable(target);
 
-			simulateMouseDown(target, 50, 50);
 			expect(target.style.position).to.equal('absolute');
 			rsz.destroy();
 			expect(target.style.position).to.equal('static');
@@ -617,15 +616,9 @@ describe('resizable', () => {
 		it('releases the target element', () => {
 			const rsz = resizable(target);
 
-			simulateMouseDown(target, 50, 50);
-			simulateMouseMove(target, 50, 50);
-			simulateMouseMove(target, 150, 150);
-			simulateMouseUp(target, 150, 150);
-
 			expect(rsz.elm).to.deep.equal(target);
 			rsz.destroy();
 			expect(rsz.elm).to.be.null;
 		});
 	});
 });
-
