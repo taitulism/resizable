@@ -40,6 +40,13 @@ function simulateMouseUp (elm, x, y) {
 	elm.dispatchEvent(event);
 }
 
+function simulateDrag (elm, from, move) {
+	simulateMouseDown(elm, from[0], from[1]);
+	simulateMouseMove(elm, from[0], from[1]);
+	simulateMouseMove(elm, from[0]+move[0], from[1]+move[1]);
+	simulateMouseUp(elm, from[0]+move[0], from[1]+move[1]);
+}
+
 describe('resizable', () => {
 	let testDOMContainer, container, target, box;
 
@@ -114,51 +121,291 @@ describe('resizable', () => {
 		});
 	});
 
-	describe.skip('dragging around', () => {
-		it('moves the grip on the X axis', () => {
-			resizable(target);
-			expect(target.style.left).to.be.empty;
+	describe('resizing', () => {
+		it('does\'nt change element position', () => {
+			const {topRightGrip} = resizable(target);
 
-			simulateMouseDown(target, box.x, box.y);
+			simulateDrag(topRightGrip, [box.x, box.y], [50, 0]);
+			const newBox = target.getBoundingClientRect();
 
-			simulateMouseMove(target, box.x, box.y);
-			expect(target.style.left).to.equal('0px');
+			expect(box.top).to.equal(newBox.top);
 
-			simulateMouseMove(target, 150, 50);
-			expect(target.style.left).to.equal('100px');
+			simulateDrag(topRightGrip, [box.x, box.y], [-50, 0]);
+			const likeBox = target.getBoundingClientRect();
+
+			expect(likeBox).to.deep.equal(box);
 		});
 
-		it('moves the elm on the Y axis', () => {
-			resizable(target);
-			expect(target.style.top).to.be.empty;
+		describe('top left grip', () => {
+			it('resizes the elm on the X axis', () => {
+				const {topLeftGrip} = resizable(target);
 
-			simulateMouseDown(target, 50, 50);
+				const widthBefore = box.width;
+				const heightBefore = box.height;
 
-			simulateMouseMove(target, 50, 50);
-			expect(target.style.left).to.equal('0px');
+				simulateDrag(topLeftGrip, [box.x, box.y], [-50, 0]);
+				const newBox = target.getBoundingClientRect();
 
-			simulateMouseMove(target, 50, 150);
-			expect(target.style.top).to.equal('100px');
+				const widthAfter = newBox.width;
+				const heightAfter = newBox.height;
+
+				expect(widthAfter - widthBefore).to.equal(50);
+				expect(heightBefore).to.equal(heightAfter);
+
+				simulateDrag(topLeftGrip, [box.x, box.y], [50, 0]);
+				const likeBox = target.getBoundingClientRect();
+
+				expect(likeBox.width).to.equal(box.width);
+				expect(likeBox.height).to.equal(box.height);
+			});
+
+			it('resizes the elm on the Y axis', () => {
+				const {topLeftGrip} = resizable(target);
+
+				const widthBefore = box.width;
+				const heightBefore = box.height;
+
+				simulateDrag(topLeftGrip, [box.x, box.y], [0, -50]);
+				const newBox = target.getBoundingClientRect();
+
+				const widthAfter = newBox.width;
+				const heightAfter = newBox.height;
+
+				expect(heightAfter - heightBefore).to.equal(50);
+				expect(widthBefore).to.equal(widthAfter);
+
+				simulateDrag(topLeftGrip, [box.x, box.y], [0, 50]);
+				const likeBox = target.getBoundingClientRect();
+
+				expect(likeBox.width).to.equal(box.width);
+				expect(likeBox.height).to.equal(box.height);
+			});
+
+			it('resizes the elm freely on both axes', () => {
+				const {topLeftGrip} = resizable(target);
+
+				const widthBefore = box.width;
+				const heightBefore = box.height;
+
+				simulateDrag(topLeftGrip, [box.x, box.y], [-50, -50]);
+				const newBox = target.getBoundingClientRect();
+
+				const widthAfter = newBox.width;
+				const heightAfter = newBox.height;
+
+				expect(widthAfter - widthBefore).to.equal(50);
+				expect(heightAfter - heightBefore).to.equal(50);
+
+				simulateDrag(topLeftGrip, [box.x, box.y], [50, 50]);
+				const likeBox = target.getBoundingClientRect();
+
+				expect(likeBox.width).to.equal(box.width);
+				expect(likeBox.height).to.equal(box.height);
+			});
 		});
 
-		it('moves the elm freely on both axes', () => {
-			resizable(target);
-			expect(target.style.left).to.be.empty;
-			expect(target.style.top).to.be.empty;
+		describe('top right grip', () => {
+			it('resizes the elm on the X axis', () => {
+				const {topRightGrip} = resizable(target);
 
-			simulateMouseDown(target, 20, 30);
+				const widthBefore = box.width;
+				const heightBefore = box.height;
 
-			simulateMouseMove(target, 20, 30);
-			expect(target.style.left).to.equal('0px');
-			expect(target.style.top).to.equal('0px');
+				simulateDrag(topRightGrip, [box.x, box.y], [50, 0]);
+				const newBox = target.getBoundingClientRect();
 
-			simulateMouseMove(target, 180, 200);
-			expect(target.style.left).to.equal('160px');
-			expect(target.style.top).to.equal('170px');
+				const widthAfter = newBox.width;
+				const heightAfter = newBox.height;
 
-			simulateMouseMove(target, 90, 250);
-			expect(target.style.left).to.equal('70px');
-			expect(target.style.top).to.equal('220px');
+				expect(widthAfter - widthBefore).to.equal(50);
+				expect(heightBefore).to.equal(heightAfter);
+
+				simulateDrag(topRightGrip, [box.x, box.y], [-50, 0]);
+				const likeBox = target.getBoundingClientRect();
+
+				expect(likeBox.width).to.equal(box.width);
+				expect(likeBox.height).to.equal(box.height);
+			});
+
+			it('resizes the elm on the Y axis', () => {
+				const {topRightGrip} = resizable(target);
+
+				const widthBefore = box.width;
+				const heightBefore = box.height;
+
+				simulateDrag(topRightGrip, [box.x, box.y], [0, -50]);
+				const newBox = target.getBoundingClientRect();
+
+				const widthAfter = newBox.width;
+				const heightAfter = newBox.height;
+
+				expect(heightAfter - heightBefore).to.equal(50);
+				expect(widthBefore).to.equal(widthAfter);
+
+				simulateDrag(topRightGrip, [box.x, box.y], [0, 50]);
+				const likeBox = target.getBoundingClientRect();
+
+				expect(likeBox.width).to.equal(box.width);
+				expect(likeBox.height).to.equal(box.height);
+			});
+
+			it('resizes the elm freely on both axes', () => {
+				const {topRightGrip} = resizable(target);
+
+				const widthBefore = box.width;
+				const heightBefore = box.height;
+
+				simulateDrag(topRightGrip, [box.x, box.y], [50, -50]);
+				const newBox = target.getBoundingClientRect();
+
+				const widthAfter = newBox.width;
+				const heightAfter = newBox.height;
+
+				expect(widthAfter - widthBefore).to.equal(50);
+				expect(heightAfter - heightBefore).to.equal(50);
+
+				simulateDrag(topRightGrip, [box.x, box.y], [-50, 50]);
+				const likeBox = target.getBoundingClientRect();
+
+				expect(likeBox.width).to.equal(box.width);
+				expect(likeBox.height).to.equal(box.height);
+			});
+		});
+
+		describe('bottom right grip', () => {
+			it('resizes the elm on the X axis', () => {
+				const {bottomRightGrip} = resizable(target);
+
+				const widthBefore = box.width;
+				const heightBefore = box.height;
+
+				simulateDrag(bottomRightGrip, [box.x, box.y], [50, 0]);
+				const newBox = target.getBoundingClientRect();
+
+				const widthAfter = newBox.width;
+				const heightAfter = newBox.height;
+
+				expect(widthAfter - widthBefore).to.equal(50);
+				expect(heightBefore).to.equal(heightAfter);
+
+				simulateDrag(bottomRightGrip, [box.x, box.y], [-50, 0]);
+				const likeBox = target.getBoundingClientRect();
+
+				expect(likeBox.width).to.equal(box.width);
+				expect(likeBox.height).to.equal(box.height);
+			});
+
+			it('resizes the elm on the Y axis', () => {
+				const {bottomRightGrip} = resizable(target);
+
+				const widthBefore = box.width;
+				const heightBefore = box.height;
+
+				simulateDrag(bottomRightGrip, [box.x, box.y], [0, 50]);
+				const newBox = target.getBoundingClientRect();
+
+				const widthAfter = newBox.width;
+				const heightAfter = newBox.height;
+
+				expect(heightAfter - heightBefore).to.equal(50);
+				expect(widthBefore).to.equal(widthAfter);
+
+				simulateDrag(bottomRightGrip, [box.x, box.y], [0, -50]);
+				const likeBox = target.getBoundingClientRect();
+
+				expect(likeBox.width).to.equal(box.width);
+				expect(likeBox.height).to.equal(box.height);
+			});
+
+			it('resizes the elm freely on both axes', () => {
+				const {bottomRightGrip} = resizable(target);
+
+				const widthBefore = box.width;
+				const heightBefore = box.height;
+
+				simulateDrag(bottomRightGrip, [box.x, box.y], [50, 50]);
+				const newBox = target.getBoundingClientRect();
+
+				const widthAfter = newBox.width;
+				const heightAfter = newBox.height;
+
+				expect(widthAfter - widthBefore).to.equal(50);
+				expect(heightAfter - heightBefore).to.equal(50);
+
+				simulateDrag(bottomRightGrip, [box.x, box.y], [-50, -50]);
+				const likeBox = target.getBoundingClientRect();
+
+				expect(likeBox.width).to.equal(box.width);
+				expect(likeBox.height).to.equal(box.height);
+			});
+		});
+
+		describe('bottom left grip', () => {
+			it('resizes the elm on the X axis', () => {
+				const {bottomLeftGrip} = resizable(target);
+
+				const widthBefore = box.width;
+				const heightBefore = box.height;
+
+				simulateDrag(bottomLeftGrip, [box.x, box.y], [-50, 0]);
+				const newBox = target.getBoundingClientRect();
+
+				const widthAfter = newBox.width;
+				const heightAfter = newBox.height;
+
+				expect(widthAfter - widthBefore).to.equal(50);
+				expect(heightBefore).to.equal(heightAfter);
+
+				simulateDrag(bottomLeftGrip, [box.x, box.y], [50, 0]);
+				const likeBox = target.getBoundingClientRect();
+
+				expect(likeBox.width).to.equal(box.width);
+				expect(likeBox.height).to.equal(box.height);
+			});
+
+			it('resizes the elm on the Y axis', () => {
+				const {bottomLeftGrip} = resizable(target);
+
+				const widthBefore = box.width;
+				const heightBefore = box.height;
+
+				simulateDrag(bottomLeftGrip, [box.x, box.y], [0, 50]);
+				const newBox = target.getBoundingClientRect();
+
+				const widthAfter = newBox.width;
+				const heightAfter = newBox.height;
+
+				expect(heightAfter - heightBefore).to.equal(50);
+				expect(widthBefore).to.equal(widthAfter);
+
+				simulateDrag(bottomLeftGrip, [box.x, box.y], [0, -50]);
+				const likeBox = target.getBoundingClientRect();
+
+				expect(likeBox.width).to.equal(box.width);
+				expect(likeBox.height).to.equal(box.height);
+			});
+
+			it('resizes the elm freely on both axes', () => {
+				const {bottomLeftGrip} = resizable(target);
+
+				const widthBefore = box.width;
+				const heightBefore = box.height;
+
+				simulateDrag(bottomLeftGrip, [box.x, box.y], [-50, 50]);
+				const newBox = target.getBoundingClientRect();
+
+				const widthAfter = newBox.width;
+				const heightAfter = newBox.height;
+
+				expect(widthAfter - widthBefore).to.equal(50);
+				expect(heightAfter - heightBefore).to.equal(50);
+
+				simulateDrag(bottomLeftGrip, [box.x, box.y], [50, -50]);
+				const likeBox = target.getBoundingClientRect();
+
+				expect(likeBox.width).to.equal(box.width);
+				expect(likeBox.height).to.equal(box.height);
+			});
 		});
 	});
 
