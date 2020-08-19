@@ -122,6 +122,7 @@ describe('resizable', () => {
 	});
 
 	describe('resizing', () => {
+		it('does\'nt change element position (all directions)');
 		it('does\'nt change element position', () => {
 			const {topRightGrip} = resizable(target);
 
@@ -459,21 +460,23 @@ describe('resizable', () => {
 		});
 	});
 
-	describe.skip('behavior', () => {
-		it('sets position: absolute on the target element', () => {
+	describe('Position Elvation', () => {
+		it('if element position is `absolute` - keep it like that', () => {
+			target.style.position = 'absolute';
+
+			expect(target.style.position).to.equal('absolute');
+			resizable(target);
+			simulateMouseDown(target, 50, 50);
+			expect(target.style.position).to.equal('absolute');
+		});
+
+		it('if element position is not `absolute` - sets `position:absolute`', () => {
 			target.style.position = 'static';
 
 			expect(target.style.position).to.equal('static');
 			resizable(target);
 			simulateMouseDown(target, 50, 50);
 			expect(target.style.position).to.equal('absolute');
-		});
-
-		it('puts the target element in the <body>', () => {
-			expect(target.parentNode.nodeName).to.equal('DIV');
-			resizable(target);
-			simulateMouseDown(target, 50, 50);
-			expect(target.parentNode.nodeName).to.equal('BODY');
 		});
 	});
 

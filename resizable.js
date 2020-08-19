@@ -32,6 +32,14 @@ function Resizable(elm, opts = {}) {
 	this.bottomRightGrip = this.createGrip('bottom-right-grip');
 	this.bottomLeftGrip = this.createGrip('bottom-left-grip');
 
+	const position = elm.style.position || window.getComputedStyle(elm).position;
+
+	if (position !== 'absolute') {
+		elm.style.position = 'absolute';
+		elm.style.top = this.box.top;
+		elm.style.left = this.box.left;
+	}
+
 	elm.classList.add('resizable');
 }
 
