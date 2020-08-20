@@ -10,6 +10,8 @@ const direction = {
 };
 
 function Resizable(elm, opts = {}) {
+	this.onMouseEnter = this.onMouseEnter.bind(this);
+	this.onMouseLeave = this.onMouseLeave.bind(this);
 	this.onDragStart = this.onDragStart.bind(this);
 	this.onDraggingTopLeft = this.onDraggingTopLeft.bind(this);
 	this.onDraggingTopRight = this.onDraggingTopRight.bind(this);
@@ -35,16 +37,35 @@ function Resizable(elm, opts = {}) {
 
 	const position = elm.style.position || window.getComputedStyle(elm).position;
 
-
 	if (position !== 'absolute') {
 		elm.style.position = 'absolute';
 		elm.style.top = this.box.top;
 		elm.style.left = this.box.left;
 	}
 
-
 	elm.classList.add('resizable');
+
+	this.bindHoverToggleGripsVisibility();
 }
+
+Resizable.prototype.bindHoverToggleGripsVisibility = function () {
+	this.elm.addEventListener('mouseenter', this.onMouseEnter);
+	this.elm.addEventListener('mouseleave', this.onMouseLeave);
+};
+
+Resizable.prototype.onMouseEnter = function () {
+	this.topLeftGrip.style.display = 'block';
+	this.topRightGrip.style.display = 'block';
+	this.bottomRightGrip.style.display = 'block';
+	this.bottomLeftGrip.style.display = 'block';
+};
+
+Resizable.prototype.onMouseLeave = function () {
+	this.topLeftGrip.style.display = 'none';
+	this.topRightGrip.style.display = 'none';
+	this.bottomRightGrip.style.display = 'none';
+	this.bottomLeftGrip.style.display = 'none';
+};
 
 Resizable.prototype.createGrip = function (className) {
 	const grip = document.createElement('div');
@@ -52,6 +73,7 @@ Resizable.prototype.createGrip = function (className) {
 	grip.style.position = 'absolute';
 	grip.style.width = this.gripSize + 'px';
 	grip.style.height = this.gripSize + 'px';
+	grip.style.display = 'none';
 	grip.addEventListener('mousedown', this.onDragStart);
 
 	grip.style.backgroundColor = 'green';

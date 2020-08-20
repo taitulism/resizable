@@ -8,6 +8,26 @@ const createEvent = (type, props = {}) => {
 	return event;
 };
 
+function simulateMouseEnter (elm, x, y) {
+	const event = createEvent('mouseenter', {
+		clientX: x || 0,
+		clientY: y || 0,
+		offsetX: x || 0,
+		offsetY: y || 0,
+	});
+	elm.dispatchEvent(event);
+}
+
+function simulateMouseLeave (elm, x, y) {
+	const event = createEvent('mouseleave', {
+		clientX: x || 0,
+		clientY: y || 0,
+		offsetX: x || 0,
+		offsetY: y || 0,
+	});
+	elm.dispatchEvent(event);
+}
+
 function simulateMouseDown (elm, x, y) {
 	const event = createEvent('mousedown', {
 		clientX: x || 0,
@@ -100,6 +120,25 @@ describe('resizable', () => {
 			expect(target.children.length).to.equal(0);
 			resizable(target);
 			expect(target.children.length).to.equal(4);
+		});
+
+		it('grips are not shown until mouse over target', () => {
+			resizable(target);
+
+			expect(target.children[0].style.display).to.equal('none');
+			expect(target.children[1].style.display).to.equal('none');
+			expect(target.children[2].style.display).to.equal('none');
+			expect(target.children[3].style.display).to.equal('none');
+			simulateMouseEnter(target, box.x + 10, box.y + 10);
+			expect(target.children[0].style.display).to.equal('block');
+			expect(target.children[1].style.display).to.equal('block');
+			expect(target.children[2].style.display).to.equal('block');
+			expect(target.children[3].style.display).to.equal('block');
+			simulateMouseLeave(target, box.x - 10, box.y - 10);
+			expect(target.children[0].style.display).to.equal('none');
+			expect(target.children[1].style.display).to.equal('none');
+			expect(target.children[2].style.display).to.equal('none');
+			expect(target.children[3].style.display).to.equal('none');
 		});
 
 		it('all grips have a `resizable-grip` classname', () => {
