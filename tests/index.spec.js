@@ -541,7 +541,7 @@ describe('resizable', () => {
 		});
 	});
 
-	describe('Position Elvation', () => {
+	describe('Position Elevation', () => {
 		it('if element position is `absolute` - keep it like that', () => {
 			target.style.position = 'absolute';
 
