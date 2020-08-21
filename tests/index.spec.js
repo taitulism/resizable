@@ -624,7 +624,8 @@ describe('resizable', () => {
 	});
 
 	describe('Destruction', () => {
-		it('stops toggling grips visibility on hover', () => {
+		it.skip('stops toggling grips visibility on hover', () => {
+			// this was relevant before grips were removed on destruction
 			const rsz = resizable(target);
 
 			rsz.forEachGrip((grip) => { expect(grip.style.display).to.equal('none'); });
@@ -640,7 +641,13 @@ describe('resizable', () => {
 			rsz.forEachGrip((grip) => { expect(grip.style.display).to.equal('none'); });
 		});
 
-		it('removes all grips');
+		it('removes all grips', () => {
+			expect(document.getElementsByClassName('resizable-grip')).to.have.lengthOf(0);
+			const rsz = resizable(target);
+			expect(document.getElementsByClassName('resizable-grip')).to.have.lengthOf(4);
+			rsz.destroy();
+			expect(document.getElementsByClassName('resizable-grip')).to.have.lengthOf(0);
+		});
 
 		it('removes all listeners', () => {
 			const rsz = resizable(target);

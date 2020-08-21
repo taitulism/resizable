@@ -218,8 +218,7 @@ Resizable.prototype.destroy = function () {
 		grip.removeEventListener('mousedown', this.onDragStart);
 	});
 
-	this.hideGrips();
-	this.unbindToggleGrips();
+	this.destroyGrips();
 
 	this.elm.classList.remove('resizable', 'resizing');
 	if (this.originalPosition) {
@@ -228,4 +227,16 @@ Resizable.prototype.destroy = function () {
 
 	this.events = null;
 	this.elm = null;
+};
+
+Resizable.prototype.destroyGrips = function () {
+	this.hideGrips();
+	this.unbindToggleGrips();
+	this.forEachGrip((grip) => {
+		this.elm.removeChild(grip);
+	});
+	this.topLeftGrip = null;
+	this.topRightGrip = null;
+	this.bottomRightGrip = null;
+	this.bottomLeftGrip = null;
 };
