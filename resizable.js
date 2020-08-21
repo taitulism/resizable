@@ -10,8 +10,8 @@ const direction = {
 };
 
 function Resizable(elm, opts = {}) {
-	this.onMouseEnter = this.onMouseEnter.bind(this);
-	this.onMouseLeave = this.onMouseLeave.bind(this);
+	this.showGrips = this.showGrips.bind(this);
+	this.hideGrips = this.hideGrips.bind(this);
 	this.onDragStart = this.onDragStart.bind(this);
 	this.onDraggingTopLeft = this.onDraggingTopLeft.bind(this);
 	this.onDraggingTopRight = this.onDraggingTopRight.bind(this);
@@ -45,26 +45,29 @@ function Resizable(elm, opts = {}) {
 
 	elm.classList.add('resizable');
 
-	this.bindHoverToggleGripsVisibility();
+	this.bindToggleGrips();
 }
 
-Resizable.prototype.bindHoverToggleGripsVisibility = function () {
-	this.elm.addEventListener('mouseenter', this.onMouseEnter);
-	this.elm.addEventListener('mouseleave', this.onMouseLeave);
+Resizable.prototype.bindToggleGrips = function () {
+	this.elm.addEventListener('mouseenter', this.showGrips);
+	this.elm.addEventListener('mouseleave', this.hideGrips);
 };
 
-Resizable.prototype.onMouseEnter = function () {
-	this.topLeftGrip.style.display = 'block';
-	this.topRightGrip.style.display = 'block';
-	this.bottomRightGrip.style.display = 'block';
-	this.bottomLeftGrip.style.display = 'block';
+Resizable.prototype.unbindToggleGrips = function () {
+	this.elm.removeEventListener('mouseenter', this.showGrips);
+	this.elm.removeEventListener('mouseleave', this.hideGrips);
 };
 
-Resizable.prototype.onMouseLeave = function () {
-	this.topLeftGrip.style.display = 'none';
-	this.topRightGrip.style.display = 'none';
-	this.bottomRightGrip.style.display = 'none';
-	this.bottomLeftGrip.style.display = 'none';
+Resizable.prototype.showGrips = function () {
+	this.forEachGrip((grip) => {
+		grip.style.display = 'block';
+	});
+};
+
+Resizable.prototype.hideGrips = function () {
+	this.forEachGrip((grip) => {
+		grip.style.display = 'none';
+	});
 };
 
 Resizable.prototype.createGrip = function (className) {
@@ -100,6 +103,13 @@ Resizable.prototype.createGrip = function (className) {
 	this.elm.appendChild(grip);
 
 	return grip;
+};
+
+Resizable.prototype.forEachGrip = function (callback) {
+	callback(this.topLeftGrip);
+	callback(this.topRightGrip);
+	callback(this.bottomRightGrip);
+	callback(this.bottomLeftGrip);
 };
 
 Resizable.prototype.on = function (eventName, callback) {
@@ -204,10 +214,12 @@ Resizable.prototype.onDrop = function (ev) {
 };
 
 Resizable.prototype.destroy = function () {
-	this.topLeftGrip.removeEventListener('mousedown', this.onDragStart);
-	this.topRightGrip.removeEventListener('mousedown', this.onDragStart);
-	this.bottomRightGrip.removeEventListener('mousedown', this.onDragStart);
-	this.bottomLeftGrip.removeEventListener('mousedown', this.onDragStart);
+	this.forEachGrip((grip) => {
+		grip.removeEventListener('mousedown', this.onDragStart);
+	});
+
+	this.hideGrips();
+	this.unbindToggleGrips();
 
 	this.elm.classList.remove('resizable', 'resizing');
 	if (this.originalPosition) {

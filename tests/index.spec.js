@@ -122,23 +122,21 @@ describe('resizable', () => {
 			expect(target.children.length).to.equal(4);
 		});
 
-		it('grips are not shown until mouse over target', () => {
-			resizable(target);
+		it('can iterate over grips', () => {
+			const rsz = resizable(target);
+			let gripCount = 0;
+			rsz.forEachGrip((grip) => gripCount++);
+			expect(gripCount).to.equal(4);
+		});
 
-			expect(target.children[0].style.display).to.equal('none');
-			expect(target.children[1].style.display).to.equal('none');
-			expect(target.children[2].style.display).to.equal('none');
-			expect(target.children[3].style.display).to.equal('none');
+		it('grips are not shown until mouse over target', () => {
+			const rsz = resizable(target);
+
+			rsz.forEachGrip((grip) => { expect(grip.style.display).to.equal('none'); });
 			simulateMouseEnter(target, box.x + 10, box.y + 10);
-			expect(target.children[0].style.display).to.equal('block');
-			expect(target.children[1].style.display).to.equal('block');
-			expect(target.children[2].style.display).to.equal('block');
-			expect(target.children[3].style.display).to.equal('block');
+			rsz.forEachGrip((grip) => { expect(grip.style.display).to.equal('block'); });
 			simulateMouseLeave(target, box.x - 10, box.y - 10);
-			expect(target.children[0].style.display).to.equal('none');
-			expect(target.children[1].style.display).to.equal('none');
-			expect(target.children[2].style.display).to.equal('none');
-			expect(target.children[3].style.display).to.equal('none');
+			rsz.forEachGrip((grip) => { expect(grip.style.display).to.equal('none'); });
 		});
 
 		it('all grips have a `resizable-grip` classname', () => {
@@ -549,7 +547,6 @@ describe('resizable', () => {
 
 			expect(target.style.position).to.equal('absolute');
 			resizable(target);
-			simulateMouseDown(target, 50, 50);
 			expect(target.style.position).to.equal('absolute');
 		});
 
@@ -558,7 +555,6 @@ describe('resizable', () => {
 
 			expect(target.style.position).to.equal('static');
 			resizable(target);
-			simulateMouseDown(target, 50, 50);
 			expect(target.style.position).to.equal('absolute');
 		});
 	});
@@ -628,6 +624,24 @@ describe('resizable', () => {
 	});
 
 	describe('Destruction', () => {
+		it('stops toggling grips visibility on hover', () => {
+			const rsz = resizable(target);
+
+			rsz.forEachGrip((grip) => { expect(grip.style.display).to.equal('none'); });
+			simulateMouseEnter(target, box.x + 10, box.y + 10);
+			rsz.forEachGrip((grip) => { expect(grip.style.display).to.equal('block'); });
+
+			rsz.destroy();
+
+			rsz.forEachGrip((grip) => { expect(grip.style.display).to.equal('none'); });
+			simulateMouseLeave(target, box.x - 10, box.y - 10);
+			rsz.forEachGrip((grip) => { expect(grip.style.display).to.equal('none'); });
+			simulateMouseEnter(target, box.x + 10, box.y + 10);
+			rsz.forEachGrip((grip) => { expect(grip.style.display).to.equal('none'); });
+		});
+
+		it('removes all grips');
+
 		it('removes all listeners', () => {
 			const rsz = resizable(target);
 			const {topRightGrip} = rsz;
@@ -696,7 +710,7 @@ describe('resizable', () => {
 			expect(target.style.position).to.equal('static');
 		});
 
-		it('releases the target element', () => {
+		it('releases the target element reference', () => {
 			const rsz = resizable(target);
 
 			expect(rsz.elm).to.deep.equal(target);
