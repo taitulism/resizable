@@ -39,8 +39,8 @@ function Resizable(elm, opts = {}) {
 
 	if (position !== 'absolute') {
 		elm.style.position = 'absolute';
-		elm.style.top = this.box.top;
-		elm.style.left = this.box.left;
+		elm.style.top = this.box.top + 'px';
+		elm.style.left = this.box.left + 'px';
 	}
 
 	elm.classList.add('resizable');

@@ -171,9 +171,9 @@ describe('resizable', () => {
 			expect(box.top).to.equal(newBox.top);
 
 			simulateDrag(topRightGrip, [box.x, box.y], [-50, 0]);
-			const likeBox = target.getBoundingClientRect();
+			const newBox = target.getBoundingClientRect();
 
-			expect(likeBox).to.deep.equal(box);
+			expect(newBox).to.deep.equal(box);
 		});
 
 		describe('top left grip', () => {
@@ -193,10 +193,10 @@ describe('resizable', () => {
 				expect(heightBefore).to.equal(heightAfter);
 
 				simulateDrag(topLeftGrip, [box.x, box.y], [50, 0]);
-				const likeBox = target.getBoundingClientRect();
+				const newBox = target.getBoundingClientRect();
 
-				expect(likeBox.width).to.equal(box.width);
-				expect(likeBox.height).to.equal(box.height);
+				expect(newBox.width).to.equal(box.width);
+				expect(newBox.height).to.equal(box.height);
 			});
 
 			it('resizes the elm on the Y axis', () => {
@@ -215,10 +215,10 @@ describe('resizable', () => {
 				expect(widthBefore).to.equal(widthAfter);
 
 				simulateDrag(topLeftGrip, [box.x, box.y], [0, 50]);
-				const likeBox = target.getBoundingClientRect();
+				const newBox = target.getBoundingClientRect();
 
-				expect(likeBox.width).to.equal(box.width);
-				expect(likeBox.height).to.equal(box.height);
+				expect(newBox.width).to.equal(box.width);
+				expect(newBox.height).to.equal(box.height);
 			});
 
 			it('resizes the elm freely on both axes', () => {
@@ -237,10 +237,10 @@ describe('resizable', () => {
 				expect(heightAfter - heightBefore).to.equal(50);
 
 				simulateDrag(topLeftGrip, [box.x, box.y], [50, 50]);
-				const likeBox = target.getBoundingClientRect();
+				const newBox = target.getBoundingClientRect();
 
-				expect(likeBox.width).to.equal(box.width);
-				expect(likeBox.height).to.equal(box.height);
+				expect(newBox.width).to.equal(box.width);
+				expect(newBox.height).to.equal(box.height);
 			});
 		});
 
