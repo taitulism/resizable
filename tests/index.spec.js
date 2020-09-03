@@ -128,14 +128,27 @@ describe('resizable', () => {
 			expect(gripCount).to.equal(4);
 		});
 
-		it('grips are not shown until mouse over target', () => {
+		it('shown when mouse is over target', () => {
 			const rsz = resizable(target);
 
-			rsz.forEachGrip((grip) => { expect(grip.style.display).to.equal('none'); });
+			rsz.forEachGrip((grip) => { expect(grip.style.opacity).to.equal('0'); });
 			simulateMouseEnter(target, box.x + 10, box.y + 10);
-			rsz.forEachGrip((grip) => { expect(grip.style.display).to.equal('block'); });
+			rsz.forEachGrip((grip) => { expect(grip.style.opacity).to.equal('1'); });
 			simulateMouseLeave(target, box.x - 10, box.y - 10);
-			rsz.forEachGrip((grip) => { expect(grip.style.display).to.equal('none'); });
+			rsz.forEachGrip((grip) => { expect(grip.style.opacity).to.equal('0'); });
+		});
+
+		it('shown when mouse is over any of them', () => {
+			const rsz = resizable(target);
+			const {topLeftGrip, topRightGrip, bottomRightGrip, bottomLeftGrip} = rsz;
+
+			rsz.forEachGrip((grip) => {
+				expect(grip.style.opacity).to.equal('0');
+				simulateMouseEnter(grip, box.x, box.y);
+				expect(grip.style.opacity).to.equal('1');
+				simulateMouseLeave(grip, box.x, box.y);
+				expect(grip.style.opacity).to.equal('0');
+			});
 		});
 
 		it('all grips have a `resizable-grip` classname', () => {

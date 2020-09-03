@@ -54,6 +54,11 @@ function Resizable(elm, opts = {}) {
 Resizable.prototype.bindToggleGrips = function () {
 	this.elm.addEventListener('mouseenter', this.showGrips);
 	this.elm.addEventListener('mouseleave', this.hideGrips);
+
+	this.forEachGrip((grip) => {
+		grip.addEventListener('mouseenter', this.showGrips);
+		grip.addEventListener('mouseleave', this.hideGrips);
+	});
 };
 
 Resizable.prototype.unbindToggleGrips = function () {
@@ -63,13 +68,13 @@ Resizable.prototype.unbindToggleGrips = function () {
 
 Resizable.prototype.showGrips = function () {
 	this.forEachGrip((grip) => {
-		grip.style.display = 'block';
+		grip.style.opacity = '1';
 	});
 };
 
 Resizable.prototype.hideGrips = function () {
 	this.forEachGrip((grip) => {
-		grip.style.display = 'none';
+		grip.style.opacity = '0';
 	});
 };
 
@@ -80,7 +85,7 @@ Resizable.prototype.createGrip = function (className) {
 	grip.style.width = this.gripSize + 'px';
 	grip.style.height = this.gripSize + 'px';
 	grip.style.borderRadius = this.gripSize + 'px';
-	grip.style.display = 'none';
+	grip.style.opacity = '0';
 	grip.addEventListener('mousedown', this.onDragStart);
 
 	grip.style.backgroundColor = 'green';
