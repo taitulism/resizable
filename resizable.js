@@ -156,8 +156,8 @@ Resizable.prototype.onDraggingTopLeft = function (ev) {
 
 	this.elm.style.width = Math.max(this.minWidth, this.box.width + mouseMovedX) + 'px';
 	this.elm.style.height = Math.max(this.minHeight, this.box.height + mouseMovedY) + 'px';
-	this.elm.style.top = this.box.top - Math.max(mouseMovedY, this.box.height * -1) + 'px';
-	this.elm.style.left = this.box.left - Math.max(mouseMovedX, this.box.width * -1) + 'px';
+	this.elm.style.top = this.box.top - Math.max(mouseMovedY, (this.box.height - this.minHeight) * -1) + 'px';
+	this.elm.style.left = this.box.left - Math.max(mouseMovedX, (this.box.width - this.minWidth) * -1) + 'px';
 };
 
 Resizable.prototype.onDraggingTopRight = function (ev) {
@@ -166,7 +166,7 @@ Resizable.prototype.onDraggingTopRight = function (ev) {
 
 	this.elm.style.width = Math.max(this.minWidth, this.box.width + mouseMovedX) + 'px';
 	this.elm.style.height = Math.max(this.minHeight, this.box.height + mouseMovedY) + 'px';
-	this.elm.style.top = this.box.top - Math.max(mouseMovedY, this.box.height * -1) + 'px';
+	this.elm.style.top = this.box.top - Math.max(mouseMovedY, (this.box.height - this.minHeight) * -1) + 'px';
 };
 
 Resizable.prototype.onDraggingBottomRight = function (ev) {
@@ -183,7 +183,7 @@ Resizable.prototype.onDraggingBottomLeft = function (ev) {
 
 	this.elm.style.width = Math.max(this.minWidth, this.box.width + mouseMovedX) + 'px';
 	this.elm.style.height = Math.max(this.minHeight, this.box.height + mouseMovedY) + 'px';
-	this.elm.style.left = this.box.left - Math.max(mouseMovedX, this.box.width * -1) + 'px';
+	this.elm.style.left = this.box.left - Math.max(mouseMovedX, (this.box.width - this.minWidth) * -1) + 'px';
 	this.elm.style.bottom = this.box.bottom - Math.max(mouseMovedY, this.box.height * -1) + 'px';
 };
 

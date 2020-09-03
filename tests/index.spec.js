@@ -575,6 +575,7 @@ describe('resizable', () => {
 
 				expect(newBox2.width).to.equal(box.width - 90);
 				expect(newBox2.height).to.equal(box.height - 100);
+				expect(newBox2.x).to.equal(box.x + 90);
 			});
 
 			it('limits the element minimum width (topRightGrip)', () => {
@@ -623,6 +624,7 @@ describe('resizable', () => {
 
 				expect(newBox2.width).to.equal(box.width - 90);
 				expect(newBox2.height).to.equal(box.height - 100);
+				expect(newBox2.x).to.equal(box.x + 90);
 			});
 		});
 
@@ -641,6 +643,7 @@ describe('resizable', () => {
 
 				expect(newBox2.width).to.equal(box.width - 100);
 				expect(newBox2.height).to.equal(box.height - 90);
+				expect(newBox2.y).to.equal(box.y + 90);
 			});
 
 			it('limits the element minimum height (topRightGrip)', () => {
@@ -657,6 +660,7 @@ describe('resizable', () => {
 
 				expect(newBox2.width).to.equal(box.width - 100);
 				expect(newBox2.height).to.equal(box.height - 90);
+				expect(newBox2.y).to.equal(box.y + 90);
 			});
 
 			it('limits the element minimum height (bottomRightGrip)', () => {
@@ -689,7 +693,6 @@ describe('resizable', () => {
 
 				expect(newBox2.width).to.equal(box.width - 100);
 				expect(newBox2.height).to.equal(box.height - 90);
-				// expect(newBox2.x).to.equal(box.x);
 			});
 		});
 
