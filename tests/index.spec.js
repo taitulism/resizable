@@ -559,8 +559,28 @@ describe('resizable', () => {
 		});
 	});
 
-	describe.skip('Options', () => {
-		describe('axis', () => {
+	describe('Options', () => {
+		describe('minWidth', () => {
+			it('limits the element minimum width', () => {
+				const {topRightGrip} = resizable(target, {minWidth: 110});
+
+				simulateDragNDrop(topRightGrip, -50, 0);
+				const newBox1 = target.getBoundingClientRect();
+
+				expect(newBox1.width).to.equal(box.width - 50);
+
+				simulateDragNDrop(topRightGrip, -50, 0);
+				const newBox2 = target.getBoundingClientRect();
+
+				expect(newBox2.width).to.equal(box.width - 90);
+			});
+		});
+
+		describe('minHeight', () => {
+
+		});
+
+		describe.skip('axis', () => {
 			it('restricts dragging along the X axis only', () => {
 				resizable(target, {axis: 'X'});
 				expect(target.style.left).to.be.empty;

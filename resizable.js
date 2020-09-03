@@ -19,6 +19,7 @@ function Resizable(elm, opts = {}) {
 	this.onDraggingBottomLeft = this.onDraggingBottomLeft.bind(this);
 	this.onDrop = this.onDrop.bind(this);
 
+	this.minWidth = opts.minWidth || 0;
 	this.startMouseX = 0;
 	this.startMouseY = 0;
 	this.boundDirection = null;
@@ -162,7 +163,7 @@ Resizable.prototype.onDraggingTopRight = function (ev) {
 	const mouseMovedX = ev.clientX - this.startMouseX;
 	const mouseMovedY = this.startMouseY - ev.clientY;
 
-	this.elm.style.width = this.box.width + mouseMovedX + 'px';
+	this.elm.style.width = Math.max(this.box.width + mouseMovedX, this.minWidth) + 'px';
 	this.elm.style.height = this.box.height + mouseMovedY + 'px';
 	this.elm.style.top = this.box.top - Math.max(mouseMovedY, this.box.height * -1) + 'px';
 };
