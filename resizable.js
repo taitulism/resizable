@@ -28,7 +28,7 @@ function Resizable(elm, opts = {}) {
 	this.box = elm.getBoundingClientRect();
 	this.elm = elm;
 	this.isResizable = true;
-	this.gripSize = 10;
+	this.gripSize = opts.gripSize || 10;
 	this.gripOffset = this.gripSize / 2 * -1;
 	this.events = {resizing: [], newSize: []};
 	this.originalPosition = elm.style.position || null;
@@ -79,6 +79,7 @@ Resizable.prototype.createGrip = function (className) {
 	grip.style.position = 'absolute';
 	grip.style.width = this.gripSize + 'px';
 	grip.style.height = this.gripSize + 'px';
+	grip.style.borderRadius = this.gripSize + 'px';
 	grip.style.display = 'none';
 	grip.addEventListener('mousedown', this.onDragStart);
 

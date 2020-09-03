@@ -696,6 +696,30 @@ describe('resizable', () => {
 			});
 		});
 
+		describe('gripSize', () => {
+			it('sets the grip elements square size', () => {
+				const {topLeftGrip, topRightGrip, bottomRightGrip, bottomLeftGrip} = resizable(target, {gripSize: 40});
+				simulateMouseEnter(target, box.x + 25, box.y + 25);
+
+				const topLeftBox = topLeftGrip.getBoundingClientRect();
+				const topRightBox = topRightGrip.getBoundingClientRect();
+				const bottomRightBox = bottomRightGrip.getBoundingClientRect();
+				const bottomLeftBox = bottomLeftGrip.getBoundingClientRect();
+
+				expect(topLeftBox.width).to.equal(40);
+				expect(topLeftBox.height).to.equal(40);
+
+				expect(topRightBox.width).to.equal(40);
+				expect(topRightBox.height).to.equal(40);
+
+				expect(bottomRightBox.width).to.equal(40);
+				expect(bottomRightBox.height).to.equal(40);
+
+				expect(bottomLeftBox.width).to.equal(40);
+				expect(bottomLeftBox.height).to.equal(40);
+			});
+		});
+
 		describe.skip('axis', () => {
 			it('restricts dragging along the X axis only', () => {
 				resizable(target, {axis: 'X'});
