@@ -20,6 +20,7 @@ function Resizable(elm, opts = {}) {
 	this.onDrop = this.onDrop.bind(this);
 
 	this.minWidth = opts.minWidth || 0;
+	this.minHeight = opts.minHeight || 0;
 	this.startMouseX = 0;
 	this.startMouseY = 0;
 	this.boundDirection = null;
@@ -153,8 +154,8 @@ Resizable.prototype.onDraggingTopLeft = function (ev) {
 	const mouseMovedX = this.startMouseX - ev.clientX;
 	const mouseMovedY = this.startMouseY - ev.clientY;
 
-	this.elm.style.width = this.box.width + mouseMovedX + 'px';
-	this.elm.style.height = this.box.height + mouseMovedY + 'px';
+	this.elm.style.width = Math.max(this.minWidth, this.box.width + mouseMovedX) + 'px';
+	this.elm.style.height = Math.max(this.minHeight, this.box.height + mouseMovedY) + 'px';
 	this.elm.style.top = this.box.top - Math.max(mouseMovedY, this.box.height * -1) + 'px';
 	this.elm.style.left = this.box.left - Math.max(mouseMovedX, this.box.width * -1) + 'px';
 };
@@ -163,8 +164,8 @@ Resizable.prototype.onDraggingTopRight = function (ev) {
 	const mouseMovedX = ev.clientX - this.startMouseX;
 	const mouseMovedY = this.startMouseY - ev.clientY;
 
-	this.elm.style.width = Math.max(this.box.width + mouseMovedX, this.minWidth) + 'px';
-	this.elm.style.height = this.box.height + mouseMovedY + 'px';
+	this.elm.style.width = Math.max(this.minWidth, this.box.width + mouseMovedX) + 'px';
+	this.elm.style.height = Math.max(this.minHeight, this.box.height + mouseMovedY) + 'px';
 	this.elm.style.top = this.box.top - Math.max(mouseMovedY, this.box.height * -1) + 'px';
 };
 
@@ -172,16 +173,16 @@ Resizable.prototype.onDraggingBottomRight = function (ev) {
 	const mouseMovedX = ev.clientX - this.startMouseX;
 	const mouseMovedY = ev.clientY - this.startMouseY;
 
-	this.elm.style.width = this.box.width + mouseMovedX + 'px';
-	this.elm.style.height = this.box.height + mouseMovedY + 'px';
+	this.elm.style.width = Math.max(this.minWidth, this.box.width + mouseMovedX) + 'px';
+	this.elm.style.height = Math.max(this.minHeight, this.box.height + mouseMovedY) + 'px';
 };
 
 Resizable.prototype.onDraggingBottomLeft = function (ev) {
 	const mouseMovedX = this.startMouseX - ev.clientX;
 	const mouseMovedY = ev.clientY - this.startMouseY;
 
-	this.elm.style.width = this.box.width + mouseMovedX + 'px';
-	this.elm.style.height = this.box.height + mouseMovedY + 'px';
+	this.elm.style.width = Math.max(this.minWidth, this.box.width + mouseMovedX) + 'px';
+	this.elm.style.height = Math.max(this.minHeight, this.box.height + mouseMovedY) + 'px';
 	this.elm.style.left = this.box.left - Math.max(mouseMovedX, this.box.width * -1) + 'px';
 	this.elm.style.bottom = this.box.bottom - Math.max(mouseMovedY, this.box.height * -1) + 'px';
 };
