@@ -623,7 +623,47 @@ describe('resizable', () => {
 		});
 	});
 
-	describe('Destruction', () => {
+	describe('API', () => {
+		describe('.enable() / .disable()', () => {
+			it('toggles resizability', () => {
+				const rsz = resizable(target);
+
+				simulateDragNDrop(rsz.bottomRightGrip, 50, 50);
+				const newBox1 = target.getBoundingClientRect();
+
+				expect(newBox1.width).to.equal(box.width + 50);
+				expect(newBox1.height).to.equal(box.height + 50);
+
+				rsz.disable();
+
+				simulateDragNDrop(rsz.bottomRightGrip, -50, -50);
+				const newBox2 = target.getBoundingClientRect();
+
+				expect(newBox2.width).to.equal(newBox1.width);
+				expect(newBox2.height).to.equal(newBox1.height);
+
+				rsz.enable();
+
+				simulateDragNDrop(rsz.bottomRightGrip, -50, -50);
+				const newBox3 = target.getBoundingClientRect();
+
+				expect(newBox3.width).to.equal(box.width);
+				expect(newBox3.height).to.equal(box.height);
+			});
+
+			it('toggles classname', () => {
+				const rsz = resizable(target);
+
+				expect(target.classList.contains('resize-disabled')).to.be.false;
+				rsz.disable();
+				expect(target.classList.contains('resize-disabled')).to.be.true;
+				rsz.enable();
+				expect(target.classList.contains('resize-disabled')).to.be.false;
+			});
+		});
+	})
+
+	describe('.destroy()', () => {
 		it.skip('stops toggling grips visibility on hover', () => {
 			// this was relevant before grips were removed on destruction
 			const rsz = resizable(target);

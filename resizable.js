@@ -25,6 +25,7 @@ function Resizable(elm, opts = {}) {
 	this.gripMoveHandler = null;
 	this.box = elm.getBoundingClientRect();
 	this.elm = elm;
+	this.isResizable = true;
 	this.gripSize = 10;
 	this.gripOffset = this.gripSize / 2 * -1;
 	this.events = {resizing: [], newSize: []};
@@ -117,6 +118,7 @@ Resizable.prototype.on = function (eventName, callback) {
 };
 
 Resizable.prototype.onDragStart = function (ev) {
+	if (!this.isResizable) return;
 	this.startMouseX = ev.clientX;
 	this.startMouseY = ev.clientY;
 
@@ -211,6 +213,16 @@ Resizable.prototype.onDrop = function (ev) {
 	this.boundDirection = null;
 	this.box = this.elm.getBoundingClientRect();
 	this.events.newSize.forEach(cb => cb(ev));
+};
+
+Resizable.prototype.disable = function () {
+	this.isResizable = false;
+	this.elm.classList.add('resize-disabled');
+};
+
+Resizable.prototype.enable = function () {
+	this.isResizable = true;
+	this.elm.classList.remove('resize-disabled');
 };
 
 Resizable.prototype.destroy = function () {
