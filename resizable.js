@@ -25,7 +25,6 @@ function Resizable(elm, opts = {}) {
 	this.startMouseY = 0;
 	this.boundDirection = null;
 	this.gripMoveHandler = null;
-	this.box = elm.getBoundingClientRect();
 	this.elm = elm;
 	this.isResizable = true;
 	this.gripSize = opts.gripSize || 10;
@@ -33,18 +32,37 @@ function Resizable(elm, opts = {}) {
 	this.events = {resizing: [], newSize: []};
 	this.originalPosition = elm.style.position || null;
 
-	this.topLeftGrip = this.createGrip('top-left-grip');
-	this.topRightGrip = this.createGrip('top-right-grip');
-	this.bottomRightGrip = this.createGrip('bottom-right-grip');
-	this.bottomLeftGrip = this.createGrip('bottom-left-grip');
-
 	const position = elm.style.position || window.getComputedStyle(elm).position;
+
+	this.box = elm.getBoundingClientRect();
 
 	if (position !== 'absolute') {
 		elm.style.position = 'absolute';
 		elm.style.top = this.box.top + 'px';
 		elm.style.left = this.box.left + 'px';
 	}
+
+	let shouldReGetBox = false;
+
+	if (this.box.width < this.minWidth) {
+		elm.style.width = this.minWidth + 'px';
+		shouldReGetBox = true;
+	}
+
+	if (this.box.height < this.minHeight) {
+		elm.style.height = this.minHeight + 'px';
+		shouldReGetBox = true;
+	}
+
+	if (shouldReGetBox) {
+		// re-get box after initial resizing
+		this.box = elm.getBoundingClientRect();
+	}
+
+	this.topLeftGrip = this.createGrip('top-left-grip');
+	this.topRightGrip = this.createGrip('top-right-grip');
+	this.bottomRightGrip = this.createGrip('bottom-right-grip');
+	this.bottomLeftGrip = this.createGrip('bottom-left-grip');
 
 	elm.classList.add('resizable');
 

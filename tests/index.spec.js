@@ -648,6 +648,13 @@ describe('resizable', () => {
 				expect(newBox2.height).to.equal(box.height - 100);
 				expect(newBox2.x).to.equal(box.x + 90);
 			});
+
+			it('on init - sets the element width if less then `minWidth`', () => {
+				expect(box.width).to.equal(200);
+				resizable(target, {minWidth: 250});
+				const newBox = target.getBoundingClientRect();
+				expect(newBox.width).to.equal(250);
+			});
 		});
 
 		describe('minHeight', () => {
@@ -715,6 +722,13 @@ describe('resizable', () => {
 
 				expect(newBox2.width).to.equal(box.width - 100);
 				expect(newBox2.height).to.equal(box.height - 90);
+			});
+
+			it('on init - sets the element height if less then `minHeight`', () => {
+				expect(box.height).to.equal(200);
+				resizable(target, {minHeight: 250});
+				const newBox = target.getBoundingClientRect();
+				expect(newBox.height).to.equal(250);
 			});
 		});
 
