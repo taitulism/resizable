@@ -247,7 +247,7 @@ Resizable.prototype.onDrop = function (ev) {
 
 	this.boundDirection = null;
 	this.box = this.elm.getBoundingClientRect();
-	this.events.resizeEnd.forEach(cb => cb(ev));
+	this.events.resizeEnd.forEach(cb => cb(ev, this.box));
 };
 
 Resizable.prototype.disable = function () {

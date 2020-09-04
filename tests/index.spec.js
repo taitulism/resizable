@@ -512,6 +512,8 @@ describe('resizable', () => {
 
 			rsz.on('resizeStart', (ev) => {
 				fired = true;
+				expect(ev).to.be.instanceOf(Event);
+				expect(ev.target).to.deep.equal(rsz.bottomRightGrip);
 			});
 
 			simulateMouseDown(rsz.bottomRightGrip, box.x, box.y);
@@ -525,6 +527,8 @@ describe('resizable', () => {
 
 			rsz.on('resizing', (ev) => {
 				fired = true;
+				expect(ev).to.be.instanceOf(Event);
+				expect(ev.target).to.deep.equal(rsz.bottomLeftGrip);
 			});
 
 			simulateMouseDown(rsz.bottomLeftGrip, box.x, box.y);
@@ -538,15 +542,22 @@ describe('resizable', () => {
 			rsz = resizable(target);
 			let fired = false;
 
-			rsz.on('resizeEnd', (ev) => {
+			rsz.on('resizeEnd', (ev, nexBox) => {
 				fired = true;
+				expect(ev).to.be.instanceOf(Event);
+				expect(ev.target).to.deep.equal(rsz.topLeftGrip);
+
+				expect(nexBox.top).to.equal(box.top - 50);
+				expect(nexBox.left).to.equal(box.left - 50);
+				expect(nexBox.width).to.equal(box.width + 50);
+				expect(nexBox.height).to.equal(box.height + 50);
 			});
 
-			simulateMouseDown(rsz.bottomLeftGrip, box.x, box.y);
+			simulateMouseDown(rsz.topLeftGrip, 0, 0);
 			expect(fired).to.be.false;
-			simulateMouseDown(rsz.bottomLeftGrip, box.x-50, (box.y + box.height)+50);
+			simulateMouseMove(rsz.topLeftGrip, -50, -50);
 			expect(fired).to.be.false;
-			simulateMouseUp(rsz.bottomLeftGrip, box.x-50, (box.y + box.height)+50);
+			simulateMouseUp(rsz.topLeftGrip, -50, -50);
 			expect(fired).to.be.true;
 		});
 	});
