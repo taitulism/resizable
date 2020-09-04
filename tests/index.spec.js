@@ -12,8 +12,6 @@ function simulateMouseEnter (elm, x, y) {
 	const event = createEvent('mouseenter', {
 		clientX: x || 0,
 		clientY: y || 0,
-		offsetX: x || 0,
-		offsetY: y || 0,
 	});
 	elm.dispatchEvent(event);
 }
@@ -22,8 +20,6 @@ function simulateMouseLeave (elm, x, y) {
 	const event = createEvent('mouseleave', {
 		clientX: x || 0,
 		clientY: y || 0,
-		offsetX: x || 0,
-		offsetY: y || 0,
 	});
 	elm.dispatchEvent(event);
 }
@@ -32,8 +28,6 @@ function simulateMouseDown (elm, x, y) {
 	const event = createEvent('mousedown', {
 		clientX: x || 0,
 		clientY: y || 0,
-		offsetX: x || 0,
-		offsetY: y || 0,
 	});
 	elm.dispatchEvent(event);
 }
@@ -42,8 +36,6 @@ function simulateMouseMove (elm, x, y) {
 	const event = createEvent('mousemove', {
 		clientX: x || 0,
 		clientY: y || 0,
-		offsetX: x || 0,
-		offsetY: y || 0,
 	});
 
 	elm.dispatchEvent(event);
@@ -53,8 +45,6 @@ function simulateMouseUp (elm, x, y) {
 	const event = createEvent('mouseup', {
 		clientX: x || 0,
 		clientY: y || 0,
-		offsetX: x || 0,
-		offsetY: y || 0,
 	});
 
 	elm.dispatchEvent(event);
