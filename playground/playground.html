@@ -15,6 +15,18 @@
 				height: 200px;
 				width: 200px;
 			}
+			.top-left-grip {
+				cursor: nw-resize;
+			}
+			.top-right-grip {
+				cursor: ne-resize;
+			}
+			.bottom-right-grip {
+				cursor: se-resize;
+			}
+			.bottom-left-grip {
+				cursor: sw-resize;
+			}
 		</style>
 	</head>
 	<body>
@@ -26,7 +38,9 @@
 	<script>
 		const targetElm = document.getElementById('target');
 		const rsz = resizable(targetElm, {
-			gripSize: 50,
+			gripSize: 16,
+			// minWidth: 250,
+			// minHeight: 350,
 		});
 	</script>
 </html>

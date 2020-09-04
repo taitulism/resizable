@@ -48,23 +48,23 @@ function Resizable(elm, opts = {}) {
 
 	elm.classList.add('resizable');
 
-	this.bindToggleGrips();
+	// this.bindToggleGrips();
 }
 
-Resizable.prototype.bindToggleGrips = function () {
-	this.elm.addEventListener('mouseenter', this.showGrips);
-	this.elm.addEventListener('mouseleave', this.hideGrips);
+// Resizable.prototype.bindToggleGrips = function () {
+// 	this.elm.addEventListener('mouseenter', this.showGrips);
+// 	this.elm.addEventListener('mouseleave', this.hideGrips);
 
-	this.forEachGrip((grip) => {
-		grip.addEventListener('mouseenter', this.showGrips);
-		grip.addEventListener('mouseleave', this.hideGrips);
-	});
-};
+// 	this.forEachGrip((grip) => {
+// 		grip.addEventListener('mouseenter', this.showGrips);
+// 		grip.addEventListener('mouseleave', this.hideGrips);
+// 	});
+// };
 
-Resizable.prototype.unbindToggleGrips = function () {
-	this.elm.removeEventListener('mouseenter', this.showGrips);
-	this.elm.removeEventListener('mouseleave', this.hideGrips);
-};
+// Resizable.prototype.unbindToggleGrips = function () {
+// 	this.elm.removeEventListener('mouseenter', this.showGrips);
+// 	this.elm.removeEventListener('mouseleave', this.hideGrips);
+// };
 
 Resizable.prototype.showGrips = function () {
 	this.forEachGrip((grip) => {
@@ -80,7 +80,7 @@ Resizable.prototype.hideGrips = function () {
 
 Resizable.prototype.createGrip = function (className) {
 	const grip = document.createElement('div');
-	grip.classList.add('resizable-grip', className);
+	grip.classList.add('resize-grip', className);
 	grip.style.position = 'absolute';
 	grip.style.width = this.gripSize + 'px';
 	grip.style.height = this.gripSize + 'px';
@@ -251,7 +251,7 @@ Resizable.prototype.destroy = function () {
 
 Resizable.prototype.destroyGrips = function () {
 	this.hideGrips();
-	this.unbindToggleGrips();
+	// this.unbindToggleGrips();
 	this.forEachGrip((grip) => {
 		this.elm.removeChild(grip);
 	});

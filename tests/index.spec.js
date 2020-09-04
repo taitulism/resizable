@@ -114,8 +114,8 @@ describe('resizable', () => {
 		expect(ctor.name).to.equal('Resizable');
 	});
 
-	describe('Grips', () => {
-		it('adds 4 grips to the target element', () => {
+	describe('Grip', () => {
+		it('4 grips are added to the target element', () => {
 			expect(target.children.length).to.equal(0);
 			resizable(target);
 			expect(target.children.length).to.equal(4);
@@ -128,7 +128,16 @@ describe('resizable', () => {
 			expect(gripCount).to.equal(4);
 		});
 
-		it('shown when mouse is over target', () => {
+		it('is transparent', () => {
+			const {topLeftGrip, topRightGrip, bottomRightGrip, bottomLeftGrip} = resizable(target);
+
+			expect(topLeftGrip.style.opacity).to.equal('0');
+			expect(topRightGrip.style.opacity).to.equal('0');
+			expect(bottomRightGrip.style.opacity).to.equal('0');
+			expect(bottomLeftGrip.style.opacity).to.equal('0');
+		});
+
+		it.skip('shown when mouse is over target', () => {
 			const rsz = resizable(target);
 
 			rsz.forEachGrip((grip) => { expect(grip.style.opacity).to.equal('0'); });
@@ -138,7 +147,7 @@ describe('resizable', () => {
 			rsz.forEachGrip((grip) => { expect(grip.style.opacity).to.equal('0'); });
 		});
 
-		it('shown when mouse is over any of them', () => {
+		it.skip('shown when mouse is over any of them', () => {
 			const rsz = resizable(target);
 			const {topLeftGrip, topRightGrip, bottomRightGrip, bottomLeftGrip} = rsz;
 
@@ -151,10 +160,10 @@ describe('resizable', () => {
 			});
 		});
 
-		it('all grips have a `resizable-grip` classname', () => {
-			expect(target.getElementsByClassName('resizable-grip')).to.have.lengthOf(0);
+		it('all grips have a `resize-grip` classname', () => {
+			expect(target.getElementsByClassName('resize-grip')).to.have.lengthOf(0);
 			resizable(target);
-			expect(target.getElementsByClassName('resizable-grip')).to.have.lengthOf(4);
+			expect(target.getElementsByClassName('resize-grip')).to.have.lengthOf(4);
 		});
 
 		it('each grip has its own classname', () => {
@@ -855,11 +864,11 @@ describe('resizable', () => {
 		});
 
 		it('removes all grips', () => {
-			expect(document.getElementsByClassName('resizable-grip')).to.have.lengthOf(0);
+			expect(document.getElementsByClassName('resize-grip')).to.have.lengthOf(0);
 			const rsz = resizable(target);
-			expect(document.getElementsByClassName('resizable-grip')).to.have.lengthOf(4);
+			expect(document.getElementsByClassName('resize-grip')).to.have.lengthOf(4);
 			rsz.destroy();
-			expect(document.getElementsByClassName('resizable-grip')).to.have.lengthOf(0);
+			expect(document.getElementsByClassName('resize-grip')).to.have.lengthOf(0);
 		});
 
 		it('removes all listeners', () => {
