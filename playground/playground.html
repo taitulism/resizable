@@ -41,6 +41,15 @@
 			gripSize: 16,
 			minWidth: 250,
 			minHeight: 350,
-		});
+		})
+		.on('resizeStart', () => {
+			console.log('resizeStart');
+		})
+		.on('resizing', () => {
+			console.log('resizing');
+		})
+		.on('resizeEnd', () => {
+			console.log('resizeEnd');
+		})
 	</script>
 </html>
