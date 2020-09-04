@@ -57,7 +57,7 @@ function simulateDragNDrop (elm, moveX, moveY) {
 }
 
 describe('resizable', () => {
-	let testDOMContainer, container, target, box;
+	let testDOMContainer, container, target, box, rsz;
 
 	before(() => {
 		testDOMContainer = document.getElementById('test-dom-container');
@@ -82,6 +82,8 @@ describe('resizable', () => {
 	});
 
 	afterEach(() => {
+		if (rsz && rsz.elm) rsz.destroy();
+
 		target.parentNode.removeChild(target);
 		target = null;
 
@@ -112,7 +114,7 @@ describe('resizable', () => {
 		});
 
 		it('can iterate over grips', () => {
-			const rsz = resizable(target);
+			rsz = resizable(target);
 			let gripCount = 0;
 			rsz.forEachGrip((grip) => gripCount++);
 			expect(gripCount).to.equal(4);
@@ -128,7 +130,7 @@ describe('resizable', () => {
 		});
 
 		it.skip('shown when mouse is over target', () => {
-			const rsz = resizable(target);
+			rsz = resizable(target);
 
 			rsz.forEachGrip((grip) => { expect(grip.style.opacity).to.equal('0'); });
 			simulateMouseEnter(target, box.x + 10, box.y + 10);
@@ -138,7 +140,7 @@ describe('resizable', () => {
 		});
 
 		it.skip('shown when mouse is over any of them', () => {
-			const rsz = resizable(target);
+			rsz = resizable(target);
 			const {topLeftGrip, topRightGrip, bottomRightGrip, bottomLeftGrip} = rsz;
 
 			rsz.forEachGrip((grip) => {
@@ -505,7 +507,7 @@ describe('resizable', () => {
 
 	describe('Events', () => {
 		it('emits `resize-start` event', () => {
-			const rsz = resizable(target);
+			rsz = resizable(target);
 			let fired = false;
 
 			rsz.on('resizeStart', (ev) => {
@@ -518,7 +520,7 @@ describe('resizable', () => {
 		});
 
 		it('emits `resizing` event', () => {
-			const rsz = resizable(target);
+			rsz = resizable(target);
 			let fired = false;
 
 			rsz.on('resizing', (ev) => {
@@ -533,7 +535,7 @@ describe('resizable', () => {
 		});
 
 		it('emits `resizeEnd` event', () => {
-			const rsz = resizable(target);
+			rsz = resizable(target);
 			let fired = false;
 
 			rsz.on('resizeEnd', (ev) => {
@@ -556,7 +558,7 @@ describe('resizable', () => {
 		});
 
 		it('sets a `resizing` classname on elm when grabbing and moving a grip', () => {
-			const rsz = resizable(target);
+			rsz = resizable(target);
 
 			expect(target.classList.contains('resizing')).to.be.false;
 			simulateMouseDown(rsz.topLeftGrip, box.x, box.y);
@@ -827,7 +829,7 @@ describe('resizable', () => {
 	describe('API', () => {
 		describe('.on()', () => {
 			it('is chainable', () => {
-				const rsz = resizable(target);
+				rsz = resizable(target);
 
 				expect(rsz.on('resizeStart', (ev) => {})).to.deep.equal(rsz);
 			});
@@ -835,7 +837,7 @@ describe('resizable', () => {
 
 		describe('.enable() / .disable()', () => {
 			it('toggles resizability', () => {
-				const rsz = resizable(target);
+				rsz = resizable(target);
 
 				simulateDragNDrop(rsz.bottomRightGrip, 50, 50);
 				const newBox1 = target.getBoundingClientRect();
@@ -861,7 +863,7 @@ describe('resizable', () => {
 			});
 
 			it('toggles classname', () => {
-				const rsz = resizable(target);
+				rsz = resizable(target);
 
 				expect(target.classList.contains('resize-disabled')).to.be.false;
 				rsz.disable();
@@ -871,7 +873,7 @@ describe('resizable', () => {
 			});
 
 			it('is chainable', () => {
-				const rsz = resizable(target);
+				rsz = resizable(target);
 
 				expect(rsz.disable()).to.deep.equal(rsz);
 				expect(rsz.enable()).to.deep.equal(rsz);
@@ -882,7 +884,7 @@ describe('resizable', () => {
 	describe('.destroy()', () => {
 		it.skip('stops toggling grips visibility on hover', () => {
 			// this was relevant before grips were removed on destruction
-			const rsz = resizable(target);
+			rsz = resizable(target);
 
 			rsz.forEachGrip((grip) => { expect(grip.style.display).to.equal('none'); });
 			simulateMouseEnter(target, box.x + 10, box.y + 10);
@@ -899,14 +901,14 @@ describe('resizable', () => {
 
 		it('removes all grips', () => {
 			expect(document.getElementsByClassName('resize-grip')).to.have.lengthOf(0);
-			const rsz = resizable(target);
+			rsz = resizable(target);
 			expect(document.getElementsByClassName('resize-grip')).to.have.lengthOf(4);
 			rsz.destroy();
 			expect(document.getElementsByClassName('resize-grip')).to.have.lengthOf(0);
 		});
 
 		it('removes all listeners', () => {
-			const rsz = resizable(target);
+			rsz = resizable(target);
 			const {topRightGrip} = rsz;
 
 			let resizeStartCount = 0;
@@ -947,7 +949,7 @@ describe('resizable', () => {
 		});
 
 		it('removes all classnames', () => {
-			const rsz = resizable(target);
+			rsz = resizable(target);
 			const {topLeftGrip} = rsz;
 
 			simulateMouseDown(topLeftGrip, 25, 25);
@@ -967,7 +969,7 @@ describe('resizable', () => {
 			target.style.position = 'static';
 
 			expect(target.style.position).to.equal('static');
-			const rsz = resizable(target);
+			rsz = resizable(target);
 
 			expect(target.style.position).to.equal('absolute');
 			rsz.destroy();
@@ -975,7 +977,7 @@ describe('resizable', () => {
 		});
 
 		it('releases the target element reference', () => {
-			const rsz = resizable(target);
+			rsz = resizable(target);
 
 			expect(rsz.elm).to.deep.equal(target);
 			rsz.destroy();
