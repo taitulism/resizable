@@ -836,7 +836,7 @@ describe('resizable', () => {
 
 	describe('API', () => {
 		describe('.on()', () => {
-			it('returns the resizable instance', () => {
+			it('is chainable', () => {
 				const rsz = resizable(target);
 
 				expect(rsz.on('resizeStart', (ev) => {})).to.deep.equal(rsz);
@@ -879,8 +879,15 @@ describe('resizable', () => {
 				rsz.enable();
 				expect(target.classList.contains('resize-disabled')).to.be.false;
 			});
+
+			it('is chainable', () => {
+				const rsz = resizable(target);
+
+				expect(rsz.disable()).to.deep.equal(rsz);
+				expect(rsz.enable()).to.deep.equal(rsz);
+			});
 		});
-	})
+	});
 
 	describe('.destroy()', () => {
 		it.skip('stops toggling grips visibility on hover', () => {
@@ -927,10 +934,6 @@ describe('resizable', () => {
 			expect(resizingCount).to.equal(0);
 			simulateMouseMove(topRightGrip, box.x + 25, box.y - 25);
 			expect(resizingCount).to.equal(1);
-
-			// TODO: add event, see trello
-			// simulateMouseMove(topRightGrip, box.x + 50, box.y - 50);
-			// expect(resizingCount).to.equal(2);
 
 			expect(resizeEndCount).to.equal(0);
 			simulateMouseUp(topRightGrip, box.x + 75, box.y - 75);
