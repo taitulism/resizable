@@ -841,8 +841,7 @@ describe('resizable', () => {
 		describe('.on()', () => {
 			it('is chainable', () => {
 				rsz = resizable(target);
-
-				expect(rsz.on('resizeStart', (ev) => {})).to.deep.equal(rsz);
+				expect(rsz.on('resizeStart', () => {})).to.deep.equal(rsz);
 			});
 		});
 
@@ -885,7 +884,6 @@ describe('resizable', () => {
 
 			it('is chainable', () => {
 				rsz = resizable(target);
-
 				expect(rsz.disable()).to.deep.equal(rsz);
 				expect(rsz.enable()).to.deep.equal(rsz);
 			});

@@ -34,29 +34,20 @@ function Resizable(elm, opts = {}) {
 
 	const position = elm.style.position || window.getComputedStyle(elm).position;
 
-	this.box = elm.getBoundingClientRect();
+	const box = elm.getBoundingClientRect();
 
 	if (position !== 'absolute') {
 		elm.style.position = 'absolute';
-		elm.style.top = this.box.top + 'px';
-		elm.style.left = this.box.left + 'px';
+		elm.style.top = box.top + 'px';
+		elm.style.left = box.left + 'px';
 	}
 
-	let shouldReGetBox = false;
-
-	if (this.box.width < this.minWidth) {
+	if (box.width < this.minWidth) {
 		elm.style.width = this.minWidth + 'px';
-		shouldReGetBox = true;
 	}
 
-	if (this.box.height < this.minHeight) {
+	if (box.height < this.minHeight) {
 		elm.style.height = this.minHeight + 'px';
-		shouldReGetBox = true;
-	}
-
-	if (shouldReGetBox) {
-		// re-get box after initial resizing
-		this.box = elm.getBoundingClientRect();
 	}
 
 	this.topLeftGrip = this.createGrip('top-left-grip');
@@ -150,6 +141,7 @@ Resizable.prototype.onDragStart = function (ev) {
 	this.startMouseY = ev.clientY;
 
 	this.elm.classList.add('resizing');
+	this.box = this.elm.getBoundingClientRect();
 
 	this.bindDraggingHandler(ev.target.classList);
 	document.addEventListener('mouseup', this.onDrop);
@@ -246,8 +238,10 @@ Resizable.prototype.onDrop = function (ev) {
 	document.removeEventListener('mouseup', this.onDrop);
 
 	this.boundDirection = null;
-	this.box = this.elm.getBoundingClientRect();
-	this.events.resizeEnd.forEach(cb => cb(ev, this.box));
+	this.box = null;
+
+	const box = this.elm.getBoundingClientRect();
+	this.events.resizeEnd.forEach(cb => cb(ev, box));
 };
 
 Resizable.prototype.disable = function () {
