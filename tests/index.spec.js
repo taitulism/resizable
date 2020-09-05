@@ -882,6 +882,16 @@ describe('resizable', () => {
 				expect(target.classList.contains('resize-disabled')).to.be.false;
 			});
 
+			it('hides the grips', () => {
+				rsz = resizable(target);
+
+				expect(rsz.topLeftGrip.style.display).not.to.equal('none');
+				rsz.disable();
+				expect(rsz.topLeftGrip.style.display).to.equal('none');
+				rsz.enable();
+				expect(rsz.topLeftGrip.style.display).not.to.equal('none');
+			});
+
 			it('is chainable', () => {
 				rsz = resizable(target);
 				expect(rsz.disable()).to.deep.equal(rsz);

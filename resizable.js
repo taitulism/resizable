@@ -247,12 +247,18 @@ Resizable.prototype.onDrop = function (ev) {
 Resizable.prototype.disable = function () {
 	this.isResizable = false;
 	this.elm.classList.add('resize-disabled');
+	this.forEachGrip((grip) => {
+		grip.style.display = 'none';
+	});
 	return this;
 };
 
 Resizable.prototype.enable = function () {
 	this.isResizable = true;
 	this.elm.classList.remove('resize-disabled');
+	this.forEachGrip((grip) => {
+		grip.style.display = '';
+	});
 	return this;
 };
 
