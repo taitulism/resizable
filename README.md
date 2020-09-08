@@ -17,7 +17,7 @@ resizable(myElm, {options});
 
 * `minWidth` - Number. Limits the element minimum width.
 * `minHeight` - Number. Limits the element minimum height.
-* `gripSize` - 
+* `gripSize` - Number. Sets the resizing grips sizeץ
 
 ## API
 Calling the `resizable()` function returns a `Resizable` instance: 
@@ -37,7 +37,6 @@ Listen to drag and drop events:
 
 ### **.destroy()**
 Kills the `Resizable` instance for good, unbinds events, releases element references.
-
 
 ## ClassNames
 For styling, the main element will be given the following classes:
