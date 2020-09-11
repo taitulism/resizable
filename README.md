@@ -35,8 +35,16 @@ Listen to drag and drop events:
 * **`'resizing'`** - moving around, on mouse move (with mouse down)
 * **`'resize-end'`** - resizing stopped, on mouse up.
 
+Callbacks' first argument is the event object.
+
+> The `resize-end` event has a second argument: the new bounding client rect of the target element (i.e. `elm.getBoundingClientRect()`)
+
 **Event Aliases**  
 For extra convenience, anything that contains `start`, `stop`/`end` or `ing` will match its respective event.
+
+### **.showGrips() / .hideGrips()**
+Toggle grips opacity. You will still need to style them in order to see them.  
+All grips have a `resize-grip` classname.
 
 ### **.destroy()**
 Kills the `Resizable` instance for good, unbinds events, releases element references.

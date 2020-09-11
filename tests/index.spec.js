@@ -551,15 +551,10 @@ describe('resizable', () => {
 			rsz = resizable(target);
 			let fired = false;
 
-			rsz.on('resize-end', (ev, nexBox) => {
+			rsz.on('resize-end', (ev) => {
 				fired = true;
 				expect(ev).to.be.instanceOf(Event);
 				expect(ev.target).to.deep.equal(rsz.topLeftGrip);
-
-				expect(nexBox.top).to.equal(box.top - 50);
-				expect(nexBox.left).to.equal(box.left - 50);
-				expect(nexBox.width).to.equal(box.width + 50);
-				expect(nexBox.height).to.equal(box.height + 50);
 			});
 
 			simulateMouseDown(rsz.topLeftGrip, 0, 0);
@@ -567,6 +562,22 @@ describe('resizable', () => {
 			simulateMouseMove(rsz.topLeftGrip, -50, -50);
 			expect(fired).to.be.false;
 			simulateMouseUp(rsz.topLeftGrip, -50, -50);
+			expect(fired).to.be.true;
+		});
+
+		it('emits `resize-end` event element box object', () => {
+			rsz = resizable(target);
+			let fired = false;
+
+			rsz.on('resize-end', (ev, newBox) => {
+				fired = true;
+				expect(newBox.top).to.equal(box.top - 50);
+				expect(newBox.left).to.equal(box.left - 50);
+				expect(newBox.width).to.equal(box.width + 50);
+				expect(newBox.height).to.equal(box.height + 50);
+			});
+
+			simulateDragNDrop(rsz.topLeftGrip, -50, -50);
 			expect(fired).to.be.true;
 		});
 	});
