@@ -213,6 +213,15 @@ describe('resizable', () => {
 			expect(bottomLeftBox.width).to.equal(10);
 			expect(bottomLeftBox.height).to.equal(10);
 		});
+
+		it('has inline style cursor', () => {
+			const {topLeftGrip, topRightGrip, bottomRightGrip, bottomLeftGrip} = resizable(target);
+
+			expect(topLeftGrip.style.cursor).to.be.equal('nw-resize');
+			expect(topRightGrip.style.cursor).to.be.equal('ne-resize');
+			expect(bottomRightGrip.style.cursor).to.be.equal('se-resize');
+			expect(bottomLeftGrip.style.cursor).to.be.equal('sw-resize');
+		});
 	});
 
 	describe('Resizing', () => {

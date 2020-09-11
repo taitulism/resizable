@@ -103,18 +103,22 @@ Resizable.prototype.createGrip = function (className) {
 		case 'top-left-grip':
 			grip.style.top = this.gripOffset + 'px';
 			grip.style.left = this.gripOffset + 'px';
+			grip.style.cursor = 'nw-resize';
 			break;
 		case 'top-right-grip':
 			grip.style.top = this.gripOffset + 'px';
 			grip.style.right = this.gripOffset + 'px';
+			grip.style.cursor = 'ne-resize';
 			break;
 		case 'bottom-right-grip':
 			grip.style.bottom = this.gripOffset + 'px';
 			grip.style.right = this.gripOffset + 'px';
+			grip.style.cursor = 'se-resize';
 			break;
 		case 'bottom-left-grip':
 			grip.style.bottom = this.gripOffset + 'px';
 			grip.style.left = this.gripOffset + 'px';
+			grip.style.cursor = 'sw-resize';
 			break;
 	}
 
