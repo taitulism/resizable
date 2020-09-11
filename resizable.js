@@ -97,8 +97,6 @@ Resizable.prototype.createGrip = function (className) {
 	grip.style.opacity = '0';
 	grip.addEventListener('mousedown', this.onDragStart);
 
-	grip.style.backgroundColor = 'green';
-
 	switch (className) {
 		case 'top-left-grip':
 			grip.style.top = this.gripOffset + 'px';

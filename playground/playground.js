@@ -1,6 +1,6 @@
 const resizable = require('../resizable');
 const targetElm = document.getElementById('target');
-const rsz = resizable(targetElm, {
+window.rsz = resizable(targetElm, {
 	gripSize: 16,
 	minWidth: 200,
 	minHeight: 200,
