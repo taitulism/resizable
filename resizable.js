@@ -1,4 +1,4 @@
-/* module.exports =  */function resizable(elm, opts) {
+module.exports = function resizable(elm, opts) {
 	return new Resizable(elm, opts);
 };
 

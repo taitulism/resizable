@@ -1,26 +1,27 @@
 {
-	"name": "TPL",
-	"description": "Doing stuff.",
-    "version": "0.0.0",
-    "license": "MIT",
-    "private": true,
-    "main": "./index.js",
-	"author": "Taitu Lizenbaum <taitu.dev@gmail.com>",
-	"homepage": "https://github.com/taitulism/TPL#readme",
-    "repository": "github:taitulism/TPL",
-    "scripts": {
-		"dev": "mocha ./tests --watch",
-        "test": "mocha ./tests --bail",
-        "lint": "eslint ./index.js ./src ./tests",
-        "check": "npm run lint && npm test -- -reporter landing",
-        "play": "node ./playground/play.js",
-        "preversion": "npm run check",
-        "postversion": "git push && git push --tags"
-    },
-    "devDependencies": {
-        "eslint": "*",
-        "mocha": "*",
-        "chai": "*",
-        "chai-as-promised": "*"
-    }
+   "name": "resizable",
+   "description": "Doing stuff.",
+   "version": "0.0.0",
+   "license": "MIT",
+   "private": true,
+   "main": "./resizable.js",
+   "author": "Taitu Lizenbaum <taitu.dev@gmail.com>",
+   "homepage": "https://github.com/taitulism/resizable#readme",
+   "repository": "github:taitulism/resizable",
+   "scripts": {
+      "dev": "parcel tests/mocha-test.html playground/playground.html",
+      "test": "mocha ./tests --bail",
+      "lint": "eslint ./index.js ./src ./tests",
+      "check": "npm run lint && npm test -- -reporter landing",
+      "play": "node ./playground/play.js",
+      "preversion": "npm run check",
+      "postversion": "git push && git push --tags"
+   },
+   "devDependencies": {
+      "chai": "*",
+      "chai-as-promised": "*",
+      "eslint": "*",
+      "mocha": "*",
+      "parcel-bundler": "^1.12.4"
+   }
 }

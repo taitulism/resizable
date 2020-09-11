@@ -1,6 +1,6 @@
 /* global resizable */
 
-// const resizable = require('../resizable');
+const resizable = require('../resizable');
 
 const createEvent = (type, props = {}) => {
 	const event = new window.Event(type, {bubbles: true});

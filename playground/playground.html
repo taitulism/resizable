@@ -34,22 +34,5 @@
 			<div id="target"></div>
 		</div>
 	</body>
-	<script src="../resizable.js"></script>
-	<script>
-		const targetElm = document.getElementById('target');
-		const rsz = resizable(targetElm, {
-			gripSize: 16,
-			minWidth: 250,
-			minHeight: 350,
-		})
-		.on('resizeStart', () => {
-			console.log('resizeStart');
-		})
-		.on('resizing', () => {
-			console.log('resizing');
-		})
-		.on('resizeEnd', () => {
-			console.log('resizeEnd');
-		})
-	</script>
+	<script src="./playground.js"></script>
 </html>
