@@ -29,7 +29,7 @@ function Resizable(elm, opts = {}) {
 	this.isResizable = true;
 	this.gripSize = opts.gripSize || 10;
 	this.gripOffset = this.gripSize / 2 * -1;
-	this.events = {resizeStart: [], resizing: [], resizeEnd: []};
+	this.events = {startResize: [], resizing: [], stopResize: []};
 	this.originalPosition = elm.style.position || null;
 
 	const position = elm.style.position || window.getComputedStyle(elm).position;
@@ -135,7 +135,16 @@ Resizable.prototype.forEachGrip = function (callback) {
 };
 
 Resizable.prototype.on = function (eventName, callback) {
-	this.events[eventName].push(callback);
+	const lowerEventName = eventName.toLowerCase();
+	if (lowerEventName.includes('start')) {
+		this.events.startResize.push(callback);
+	}
+	else if (lowerEventName.includes('ing')) {
+		this.events.resizing.push(callback);
+	}
+	else if (lowerEventName.includes('end') || lowerEventName.includes('stop')) {
+		this.events.stopResize.push(callback);
+	}
 	return this;
 };
 
@@ -149,7 +158,7 @@ Resizable.prototype.onDragStart = function (ev) {
 
 	this.bindDraggingHandler(ev.target.classList);
 	document.addEventListener('mouseup', this.onDrop);
-	this.events.resizeStart.forEach(cb => cb(ev));
+	this.events.startResize.forEach(cb => cb(ev));
 };
 
 Resizable.prototype.bindDraggingHandler = function (classList) {
@@ -245,7 +254,7 @@ Resizable.prototype.onDrop = function (ev) {
 	this.box = null;
 
 	const box = this.elm.getBoundingClientRect();
-	this.events.resizeEnd.forEach(cb => cb(ev, box));
+	this.events.stopResize.forEach(cb => cb(ev, box));
 };
 
 Resizable.prototype.disable = function () {

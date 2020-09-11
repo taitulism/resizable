@@ -35,6 +35,9 @@ Listen to drag and drop events:
 * **`'resizing'`** - moving around, on mouse move (with mouse down)
 * **`'resize-end'`** - resizing stopped, on mouse up.
 
+**Event Aliases**  
+For extra convenience, anything that contains `start`, `stop`/`end` or `ing` will match its respective event.
+
 ### **.destroy()**
 Kills the `Resizable` instance for good, unbinds events, releases element references.
 

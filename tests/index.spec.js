@@ -519,7 +519,7 @@ describe('resizable', () => {
 			rsz = resizable(target);
 			let fired = false;
 
-			rsz.on('resizeStart', (ev) => {
+			rsz.on('resize-start', (ev) => {
 				fired = true;
 				expect(ev).to.be.instanceOf(Event);
 				expect(ev.target).to.deep.equal(rsz.bottomRightGrip);
@@ -547,11 +547,11 @@ describe('resizable', () => {
 			simulateMouseUp(rsz.bottomLeftGrip, box.x-50, (box.y + box.height)+50);
 		});
 
-		it('emits `resizeEnd` event', () => {
+		it('emits `resize-end` event', () => {
 			rsz = resizable(target);
 			let fired = false;
 
-			rsz.on('resizeEnd', (ev, nexBox) => {
+			rsz.on('resize-end', (ev, nexBox) => {
 				fired = true;
 				expect(ev).to.be.instanceOf(Event);
 				expect(ev.target).to.deep.equal(rsz.topLeftGrip);
@@ -943,9 +943,9 @@ describe('resizable', () => {
 			let resizingCount = 0;
 			let resizeEndCount = 0;
 
-			rsz.on('resizeStart', () => { resizeStartCount++; });
+			rsz.on('start', () => { resizeStartCount++; });
 			rsz.on('resizing', () => { resizingCount++; });
-			rsz.on('resizeEnd', () => { resizeEndCount++; });
+			rsz.on('end', () => { resizeEndCount++; });
 
 			expect(resizeStartCount).to.equal(0);
 			simulateMouseDown(topRightGrip, box.x, box.y);
