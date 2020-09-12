@@ -11,7 +11,7 @@
    "scripts": {
       "dev": "parcel tests/mocha-test.html playground/playground.html",
       "test": "mocha ./tests --bail",
-      "lint": "eslint ./index.js ./src ./tests",
+      "lint": "eslint ./resizable.js ./src ./tests",
       "check": "npm run lint && npm test -- -reporter landing",
       "play": "node ./playground/play.js",
       "preversion": "npm run check",

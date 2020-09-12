@@ -1,4 +1,4 @@
-/* global resizable */
+/* global expect */
 
 const resizable = require('../resizable');
 
@@ -116,7 +116,7 @@ describe('resizable', () => {
 		it('can iterate over grips', () => {
 			rsz = resizable(target);
 			let gripCount = 0;
-			rsz.forEachGrip((grip) => gripCount++);
+			rsz.forEachGrip(() => gripCount++);
 			expect(gripCount).to.equal(4);
 		});
 
@@ -132,18 +132,15 @@ describe('resizable', () => {
 		it.skip('shown when mouse is over target', () => {
 			rsz = resizable(target);
 
-			rsz.forEachGrip((grip) => { expect(grip.style.opacity).to.equal('0'); });
+			rsz.forEachGrip(grip => expect(grip.style.opacity).to.equal('0'));
 			simulateMouseEnter(target, box.x + 10, box.y + 10);
-			rsz.forEachGrip((grip) => { expect(grip.style.opacity).to.equal('1'); });
+			rsz.forEachGrip(grip => expect(grip.style.opacity).to.equal('1'));
 			simulateMouseLeave(target, box.x - 10, box.y - 10);
-			rsz.forEachGrip((grip) => { expect(grip.style.opacity).to.equal('0'); });
+			rsz.forEachGrip(grip => expect(grip.style.opacity).to.equal('0'));
 		});
 
 		it.skip('shown when mouse is over any of them', () => {
-			rsz = resizable(target);
-			const {topLeftGrip, topRightGrip, bottomRightGrip, bottomLeftGrip} = rsz;
-
-			rsz.forEachGrip((grip) => {
+			resizable(target).forEachGrip((grip) => {
 				expect(grip.style.opacity).to.equal('0');
 				simulateMouseEnter(grip, box.x, box.y);
 				expect(grip.style.opacity).to.equal('1');
@@ -542,9 +539,9 @@ describe('resizable', () => {
 
 			simulateMouseDown(rsz.bottomLeftGrip, box.x, box.y);
 			expect(fired).to.be.false;
-			simulateMouseMove(rsz.bottomLeftGrip, box.x-50, (box.y + box.height)+50);
+			simulateMouseMove(rsz.bottomLeftGrip, box.x - 50, (box.y + box.height) + 50);
 			expect(fired).to.be.true;
-			simulateMouseUp(rsz.bottomLeftGrip, box.x-50, (box.y + box.height)+50);
+			simulateMouseUp(rsz.bottomLeftGrip, box.x - 50, (box.y + box.height) + 50);
 		});
 
 		it('emits `resize-end` event', () => {
@@ -594,9 +591,9 @@ describe('resizable', () => {
 			expect(target.classList.contains('resizing')).to.be.false;
 			simulateMouseDown(rsz.topLeftGrip, box.x, box.y);
 			expect(target.classList.contains('resizing')).to.be.true;
-			simulateMouseMove(rsz.topLeftGrip, box.x-50, box.y-50);
+			simulateMouseMove(rsz.topLeftGrip, box.x - 50, box.y - 50);
 			expect(target.classList.contains('resizing')).to.be.true;
-			simulateMouseUp(rsz.topLeftGrip, box.x-50, box.y-50);
+			simulateMouseUp(rsz.topLeftGrip, box.x - 50, box.y - 50);
 			expect(target.classList.contains('resizing')).to.be.false;
 		});
 	});
@@ -772,7 +769,8 @@ describe('resizable', () => {
 
 		describe('gripSize', () => {
 			it('sets the grip elements square size', () => {
-				const {topLeftGrip, topRightGrip, bottomRightGrip, bottomLeftGrip} = resizable(target, {gripSize: 40});
+				const rsz = resizable(target, {gripSize: 40});
+				const {topLeftGrip, topRightGrip, bottomRightGrip, bottomLeftGrip} = rsz;
 				simulateMouseEnter(target, box.x + 25, box.y + 25);
 
 				const topLeftBox = topLeftGrip.getBoundingClientRect();
@@ -828,6 +826,7 @@ describe('resizable', () => {
 			});
 
 			it('opt:axis bug', () => {
+
 				/*
 					When restricting to an axis, moving the mouse in the other
 					axis misses the mouseup event (mouse is outside of target).
@@ -861,7 +860,7 @@ describe('resizable', () => {
 		describe('.on()', () => {
 			it('is chainable', () => {
 				rsz = resizable(target);
-				expect(rsz.on('resizeStart', () => {})).to.deep.equal(rsz);
+				expect(rsz.on('resizeStart', () => null)).to.deep.equal(rsz);
 			});
 		});
 
@@ -925,17 +924,17 @@ describe('resizable', () => {
 			// this was relevant before grips were removed on destruction
 			rsz = resizable(target);
 
-			rsz.forEachGrip((grip) => { expect(grip.style.display).to.equal('none'); });
+			rsz.forEachGrip(grip => expect(grip.style.display).to.equal('none'));
 			simulateMouseEnter(target, box.x + 10, box.y + 10);
-			rsz.forEachGrip((grip) => { expect(grip.style.display).to.equal('block'); });
+			rsz.forEachGrip(grip => expect(grip.style.display).to.equal('block'));
 
 			rsz.destroy();
 
-			rsz.forEachGrip((grip) => { expect(grip.style.display).to.equal('none'); });
+			rsz.forEachGrip(grip => expect(grip.style.display).to.equal('none'));
 			simulateMouseLeave(target, box.x - 10, box.y - 10);
-			rsz.forEachGrip((grip) => { expect(grip.style.display).to.equal('none'); });
+			rsz.forEachGrip(grip => expect(grip.style.display).to.equal('none'));
 			simulateMouseEnter(target, box.x + 10, box.y + 10);
-			rsz.forEachGrip((grip) => { expect(grip.style.display).to.equal('none'); });
+			rsz.forEachGrip(grip => expect(grip.style.display).to.equal('none'));
 		});
 
 		it('removes all grips', () => {
@@ -954,9 +953,9 @@ describe('resizable', () => {
 			let resizingCount = 0;
 			let resizeEndCount = 0;
 
-			rsz.on('start', () => { resizeStartCount++; });
-			rsz.on('resizing', () => { resizingCount++; });
-			rsz.on('end', () => { resizeEndCount++; });
+			rsz.on('start', () => resizeStartCount++);
+			rsz.on('resizing', () => resizingCount++);
+			rsz.on('end', () => resizeEndCount++);
 
 			expect(resizeStartCount).to.equal(0);
 			simulateMouseDown(topRightGrip, box.x, box.y);

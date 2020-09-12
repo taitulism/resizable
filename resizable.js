@@ -1,4 +1,6 @@
-module.exports = function resizable(elm, opts) {
+/* eslint-disable indent */
+/* eslint-disable no-magic-numbers */
+module.exports = function resizable (elm, opts) {
 	return new Resizable(elm, opts);
 };
 
@@ -9,7 +11,7 @@ const direction = {
 	btmLeft: 3,
 };
 
-function Resizable(elm, opts = {}) {
+function Resizable (elm, opts = {}) {
 	this.showGrips = this.showGrips.bind(this);
 	this.hideGrips = this.hideGrips.bind(this);
 	this.onDragStart = this.onDragStart.bind(this);
@@ -29,8 +31,13 @@ function Resizable(elm, opts = {}) {
 	this.isResizable = true;
 	this.gripSize = opts.gripSize || 10;
 	this.gripOffset = this.gripSize / 2 * -1;
-	this.events = {startResize: [], resizing: [], stopResize: []};
 	this.originalPosition = elm.style.position || null;
+
+	this.events = {
+		startResize: [],
+		resizing: [],
+		stopResize: []
+	};
 
 	const position = elm.style.position || window.getComputedStyle(elm).position;
 
@@ -117,6 +124,8 @@ Resizable.prototype.createGrip = function (className) {
 			grip.style.bottom = this.gripOffset + 'px';
 			grip.style.left = this.gripOffset + 'px';
 			grip.style.cursor = 'sw-resize';
+			break;
+		default:
 			break;
 	}
 
@@ -231,17 +240,16 @@ Resizable.prototype.onDrop = function (ev) {
 		case direction.topLeft:
 			gripHandler = this.onDraggingTopLeft;
 			break;
-
 		case direction.topRight:
 			gripHandler = this.onDraggingTopRight;
 			break;
-
 		case direction.btmRight:
 			gripHandler = this.onDraggingBottomRight;
 			break;
-
 		case direction.btmLeft:
 			gripHandler = this.onDraggingBottomLeft;
+			break;
+		default:
 			break;
 	}
 
