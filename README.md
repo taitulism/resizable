@@ -17,7 +17,7 @@ resizable(myElm, {options});
 
 * `minWidth` - Number. Limits the element minimum width.
 * `minHeight` - Number. Limits the element minimum height.
-* `gripSize` - Number. Sets the resizing grips sizeץ
+* `gripSize` - Number. Sets the resizing grips size.
 
 ## API
 Calling the `resizable()` function returns a `Resizable` instance: 
