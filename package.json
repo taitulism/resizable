@@ -1,5 +1,5 @@
 {
-   "name": "resizable",
+   "name": "resizable-elm",
    "description": "Makes elements resizable. Vanilla style.",
    "version": "0.0.0",
    "license": "MIT",
@@ -23,10 +23,11 @@
       "parcel-bundler": "1.12.4"
    },
    "keywords": [
-	   "resizable",
-	   "resize",
-	   "vanilla",
-	   "html",
-	   "element"
+      "resizable",
+      "element",
+      "resize",
+      "html",
+      "vanilla",
+      "js"
    ]
 }
