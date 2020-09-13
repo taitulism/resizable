@@ -1,7 +1,7 @@
 {
    "name": "resizable-elm",
    "description": "Makes elements resizable. Vanilla style.",
-   "version": "0.0.0",
+   "version": "0.0.1",
    "license": "MIT",
    "main": "./resizable.js",
    "author": "Taitu Lizenbaum <taitu.dev@gmail.com>",
