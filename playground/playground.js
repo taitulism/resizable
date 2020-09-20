@@ -1,6 +1,5 @@
 /* eslint-disable */
 
-const resizable = require('../resizable');
 const targetElm = document.getElementById('target');
 window.rsz = resizable(targetElm, {
 	gripSize: 16,

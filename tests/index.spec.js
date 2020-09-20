@@ -1,6 +1,4 @@
-/* global expect */
-
-const resizable = require('../resizable');
+/* global expect resizable */
 
 const createEvent = (type, props = {}) => {
 	const event = new window.Event(type, {bubbles: true});
@@ -74,6 +72,8 @@ describe('resizable', () => {
 
 		target = document.createElement('div');
 		target.id = 'target';
+		target.style.width = '200px';
+		target.style.height = '200px';
 
 		container.appendChild(target);
 		testDOMContainer.appendChild(container);
