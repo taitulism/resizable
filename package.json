@@ -1,7 +1,7 @@
 {
    "name": "resizable-elm",
    "description": "Makes elements resizable. Vanilla style.",
-   "version": "0.0.2",
+   "version": "0.0.3",
    "license": "MIT",
    "browser": "./dist/resizable.browser.js",
    "module": "./dist/resizable.esm-bundle.js",
