@@ -69,11 +69,15 @@ describe('resizable', () => {
 	beforeEach(() => {
 		container = document.createElement('div');
 		container.id = 'container';
+		container.style.height = '400px';
+		container.style.width = '1000';
+		container.style.padding = '20px';
 
 		target = document.createElement('div');
 		target.id = 'target';
-		target.style.width = '200px';
-		target.style.height = '200px';
+		target.style.width = '100px';
+		target.style.height = '100px';
+		target.style.backgroundColor = 'pink';
 
 		container.appendChild(target);
 		testDOMContainer.appendChild(container);
@@ -619,151 +623,151 @@ describe('resizable', () => {
 	describe('Options', () => {
 		describe('minWidth', () => {
 			it('limits the element minimum width (topLeftGrip)', () => {
-				const {topLeftGrip} = resizable(target, {minWidth: 110});
+				const {topLeftGrip} = resizable(target, {minWidth: 70});
 
-				simulateDragNDrop(topLeftGrip, 50, 50);
+				simulateDragNDrop(topLeftGrip, 20, 20);
 				const newBox1 = target.getBoundingClientRect();
 
-				expect(newBox1.width).to.equal(box.width - 50);
-				expect(newBox1.height).to.equal(box.height - 50);
+				expect(newBox1.width).to.equal(box.width - 20);
+				expect(newBox1.height).to.equal(box.height - 20);
 
-				simulateDragNDrop(topLeftGrip, 50, 50);
+				simulateDragNDrop(topLeftGrip, 20, 20);
 				const newBox2 = target.getBoundingClientRect();
 
-				expect(newBox2.width).to.equal(box.width - 90);
-				expect(newBox2.height).to.equal(box.height - 100);
-				expect(newBox2.x).to.equal(box.x + 90);
+				expect(newBox2.width).to.equal(box.width - 30);
+				expect(newBox2.height).to.equal(box.height - 40);
+				expect(newBox2.x).to.equal(box.x + 30);
 			});
 
 			it('limits the element minimum width (topRightGrip)', () => {
-				const {topRightGrip} = resizable(target, {minWidth: 110});
+				const {topRightGrip} = resizable(target, {minWidth: 70});
 
-				simulateDragNDrop(topRightGrip, -50, 50);
+				simulateDragNDrop(topRightGrip, -20, 20);
 				const newBox1 = target.getBoundingClientRect();
 
-				expect(newBox1.width).to.equal(box.width - 50);
-				expect(newBox1.height).to.equal(box.height - 50);
+				expect(newBox1.width).to.equal(box.width - 20);
+				expect(newBox1.height).to.equal(box.height - 20);
 
-				simulateDragNDrop(topRightGrip, -50, 50);
+				simulateDragNDrop(topRightGrip, -20, 20);
 				const newBox2 = target.getBoundingClientRect();
 
-				expect(newBox2.width).to.equal(box.width - 90);
-				expect(newBox2.height).to.equal(box.height - 100);
+				expect(newBox2.width).to.equal(box.width - 30);
+				expect(newBox2.height).to.equal(box.height - 40);
 			});
 
 			it('limits the element minimum width (bottomRightGrip)', () => {
-				const {bottomRightGrip} = resizable(target, {minWidth: 110});
+				const {bottomRightGrip} = resizable(target, {minWidth: 70});
 
-				simulateDragNDrop(bottomRightGrip, -50, -50);
+				simulateDragNDrop(bottomRightGrip, -20, -20);
 				const newBox1 = target.getBoundingClientRect();
 
-				expect(newBox1.width).to.equal(box.width - 50);
-				expect(newBox1.height).to.equal(box.height - 50);
+				expect(newBox1.width).to.equal(box.width - 20);
+				expect(newBox1.height).to.equal(box.height - 20);
 
-				simulateDragNDrop(bottomRightGrip, -50, -50);
+				simulateDragNDrop(bottomRightGrip, -20, -20);
 				const newBox2 = target.getBoundingClientRect();
 
-				expect(newBox2.width).to.equal(box.width - 90);
-				expect(newBox2.height).to.equal(box.height - 100);
+				expect(newBox2.width).to.equal(box.width - 30);
+				expect(newBox2.height).to.equal(box.height - 40);
 			});
 
 			it('limits the element minimum width (bottomLeftGrip)', () => {
-				const {bottomLeftGrip} = resizable(target, {minWidth: 110});
+				const {bottomLeftGrip} = resizable(target, {minWidth: 70});
 
-				simulateDragNDrop(bottomLeftGrip, 50, -50);
+				simulateDragNDrop(bottomLeftGrip, 20, -20);
 				const newBox1 = target.getBoundingClientRect();
 
-				expect(newBox1.width).to.equal(box.width - 50);
-				expect(newBox1.height).to.equal(box.height - 50);
+				expect(newBox1.width).to.equal(box.width - 20);
+				expect(newBox1.height).to.equal(box.height - 20);
 
-				simulateDragNDrop(bottomLeftGrip, 50, -50);
+				simulateDragNDrop(bottomLeftGrip, 20, -20);
 				const newBox2 = target.getBoundingClientRect();
 
-				expect(newBox2.width).to.equal(box.width - 90);
-				expect(newBox2.height).to.equal(box.height - 100);
-				expect(newBox2.x).to.equal(box.x + 90);
+				expect(newBox2.width).to.equal(box.width - 30);
+				expect(newBox2.height).to.equal(box.height - 40);
+				expect(newBox2.x).to.equal(box.x + 30);
 			});
 
 			it('on init - sets the element width if less then `minWidth`', () => {
-				expect(box.width).to.equal(200);
-				resizable(target, {minWidth: 250});
+				expect(box.width).to.equal(100);
+				resizable(target, {minWidth: 120});
 				const newBox = target.getBoundingClientRect();
-				expect(newBox.width).to.equal(250);
+				expect(newBox.width).to.equal(120);
 			});
 		});
 
 		describe('minHeight', () => {
 			it('limits the element minimum height (topLeftGrip)', () => {
-				const {topLeftGrip} = resizable(target, {minHeight: 110});
+				const {topLeftGrip} = resizable(target, {minHeight: 70});
 
-				simulateDragNDrop(topLeftGrip, 50, 50);
+				simulateDragNDrop(topLeftGrip, 20, 20);
 				const newBox1 = target.getBoundingClientRect();
 
-				expect(newBox1.width).to.equal(box.width - 50);
-				expect(newBox1.height).to.equal(box.height - 50);
+				expect(newBox1.width).to.equal(box.width - 20);
+				expect(newBox1.height).to.equal(box.height - 20);
 
-				simulateDragNDrop(topLeftGrip, 50, 50);
+				simulateDragNDrop(topLeftGrip, 20, 20);
 				const newBox2 = target.getBoundingClientRect();
 
-				expect(newBox2.width).to.equal(box.width - 100);
-				expect(newBox2.height).to.equal(box.height - 90);
-				expect(newBox2.y).to.equal(box.y + 90);
+				expect(newBox2.width).to.equal(box.width - 40);
+				expect(newBox2.height).to.equal(box.height - 30);
+				expect(newBox2.y).to.equal(box.y + 30);
 			});
 
 			it('limits the element minimum height (topRightGrip)', () => {
-				const {topRightGrip} = resizable(target, {minHeight: 110});
+				const {topRightGrip} = resizable(target, {minHeight: 70});
 
-				simulateDragNDrop(topRightGrip, -50, 50);
+				simulateDragNDrop(topRightGrip, -20, 20);
 				const newBox1 = target.getBoundingClientRect();
 
-				expect(newBox1.width).to.equal(box.width - 50);
-				expect(newBox1.height).to.equal(box.height - 50);
+				expect(newBox1.width).to.equal(box.width - 20);
+				expect(newBox1.height).to.equal(box.height - 20);
 
-				simulateDragNDrop(topRightGrip, -50, 50);
+				simulateDragNDrop(topRightGrip, -20, 20);
 				const newBox2 = target.getBoundingClientRect();
 
-				expect(newBox2.width).to.equal(box.width - 100);
-				expect(newBox2.height).to.equal(box.height - 90);
-				expect(newBox2.y).to.equal(box.y + 90);
+				expect(newBox2.width).to.equal(box.width - 40);
+				expect(newBox2.height).to.equal(box.height - 30);
+				expect(newBox2.y).to.equal(box.y + 30);
 			});
 
 			it('limits the element minimum height (bottomRightGrip)', () => {
-				const {bottomRightGrip} = resizable(target, {minHeight: 110});
+				const {bottomRightGrip} = resizable(target, {minHeight: 70});
 
-				simulateDragNDrop(bottomRightGrip, -50, -50);
+				simulateDragNDrop(bottomRightGrip, -20, -20);
 				const newBox1 = target.getBoundingClientRect();
 
-				expect(newBox1.width).to.equal(box.width - 50);
-				expect(newBox1.height).to.equal(box.height - 50);
+				expect(newBox1.width).to.equal(box.width - 20);
+				expect(newBox1.height).to.equal(box.height - 20);
 
-				simulateDragNDrop(bottomRightGrip, -50, -50);
+				simulateDragNDrop(bottomRightGrip, -20, -20);
 				const newBox2 = target.getBoundingClientRect();
 
-				expect(newBox2.width).to.equal(box.width - 100);
-				expect(newBox2.height).to.equal(box.height - 90);
+				expect(newBox2.width).to.equal(box.width - 40);
+				expect(newBox2.height).to.equal(box.height - 30);
 			});
 
 			it('limits the element minimum height (bottomLeftGrip)', () => {
-				const {bottomLeftGrip} = resizable(target, {minHeight: 110});
+				const {bottomLeftGrip} = resizable(target, {minHeight: 70});
 
-				simulateDragNDrop(bottomLeftGrip, 50, -50);
+				simulateDragNDrop(bottomLeftGrip, 20, -20);
 				const newBox1 = target.getBoundingClientRect();
 
-				expect(newBox1.width).to.equal(box.width - 50);
-				expect(newBox1.height).to.equal(box.height - 50);
+				expect(newBox1.width).to.equal(box.width - 20);
+				expect(newBox1.height).to.equal(box.height - 20);
 
-				simulateDragNDrop(bottomLeftGrip, 50, -50);
+				simulateDragNDrop(bottomLeftGrip, 20, -20);
 				const newBox2 = target.getBoundingClientRect();
 
-				expect(newBox2.width).to.equal(box.width - 100);
-				expect(newBox2.height).to.equal(box.height - 90);
+				expect(newBox2.width).to.equal(box.width - 40);
+				expect(newBox2.height).to.equal(box.height - 30);
 			});
 
 			it('on init - sets the element height if less then `minHeight`', () => {
-				expect(box.height).to.equal(200);
-				resizable(target, {minHeight: 250});
+				expect(box.height).to.equal(100);
+				resizable(target, {minHeight: 150});
 				const newBox = target.getBoundingClientRect();
-				expect(newBox.height).to.equal(250);
+				expect(newBox.height).to.equal(150);
 			});
 		});
 
