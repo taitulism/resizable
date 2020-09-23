@@ -589,6 +589,15 @@ describe('resizable', () => {
 			expect(target.classList.contains('resizable')).to.be.true;
 		});
 
+		it('sets a `grabbed` classname on elm when grabbing it', () => {
+			rsz = resizable(target);
+			expect(target.classList.contains('grabbed')).to.be.false;
+			simulateMouseDown(rsz.bottomRightGrip, box.x, box.y);
+			expect(target.classList.contains('grabbed')).to.be.true;
+			simulateMouseUp(rsz.bottomRightGrip, box.x, box.y);
+			expect(target.classList.contains('grabbed')).to.be.false;
+		});
+
 		it('sets a `resizing` classname on elm when grabbing and moving a grip', () => {
 			rsz = resizable(target);
 
@@ -599,6 +608,15 @@ describe('resizable', () => {
 			expect(target.classList.contains('resizing')).to.be.true;
 			simulateMouseUp(rsz.topLeftGrip, box.x - 50, box.y - 50);
 			expect(target.classList.contains('resizing')).to.be.false;
+		});
+
+		it('leaves only the `resizable` classname on elm when droping a grip', () => {
+			rsz = resizable(target);
+			simulateMouseDown(rsz.bottomRightGrip, box.x, box.y);
+			simulateMouseMove(rsz.bottomRightGrip, box.x, box.y);
+			simulateMouseUp(rsz.bottomRightGrip, box.x, box.y);
+			expect(target.classList.contains('resizable')).to.be.true;
+			expect(target.classList.length).to.equal(1);
 		});
 	});
 

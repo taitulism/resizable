@@ -163,6 +163,8 @@ Resizable.prototype.onDragStart = function onDragStart (ev) {
 	this.elm.classList.add('resizing');
 	this.box = this.elm.getBoundingClientRect();
 
+	this.elm.classList.add('grabbed');
+
 	this.bindDraggingHandler(ev.target.classList);
 	document.addEventListener('mouseup', this.onDrop);
 	this.events.startResize.forEach(cb => cb(ev));
@@ -196,6 +198,7 @@ Resizable.prototype.onDraggingTopLeft = function onDraggingTopLeft (ev) {
 	this.elm.style.top = this.box.top - Math.max(mouseMovedY, (this.box.height - this.minHeight) * -1) + 'px';
 	this.elm.style.left = this.box.left - Math.max(mouseMovedX, (this.box.width - this.minWidth) * -1) + 'px';
 
+	this.elm.classList.replace('grabbed', 'resizing');
 	this.events.resizing.forEach(cb => cb(ev));
 };
 
@@ -207,6 +210,7 @@ Resizable.prototype.onDraggingTopRight = function onDraggingTopRight (ev) {
 	this.elm.style.height = Math.max(this.minHeight, this.box.height + mouseMovedY) + 'px';
 	this.elm.style.top = this.box.top - Math.max(mouseMovedY, (this.box.height - this.minHeight) * -1) + 'px';
 
+	this.elm.classList.replace('grabbed', 'resizing');
 	this.events.resizing.forEach(cb => cb(ev));
 };
 
@@ -217,6 +221,7 @@ Resizable.prototype.onDraggingBottomRight = function onDraggingBottomRight (ev) 
 	this.elm.style.width = Math.max(this.minWidth, this.box.width + mouseMovedX) + 'px';
 	this.elm.style.height = Math.max(this.minHeight, this.box.height + mouseMovedY) + 'px';
 
+	this.elm.classList.replace('grabbed', 'resizing');
 	this.events.resizing.forEach(cb => cb(ev));
 };
 
@@ -229,11 +234,12 @@ Resizable.prototype.onDraggingBottomLeft = function onDraggingBottomLeft (ev) {
 	this.elm.style.left = this.box.left - Math.max(mouseMovedX, (this.box.width - this.minWidth) * -1) + 'px';
 	this.elm.style.bottom = this.box.bottom - Math.max(mouseMovedY, this.box.height * -1) + 'px';
 
+	this.elm.classList.replace('grabbed', 'resizing');
 	this.events.resizing.forEach(cb => cb(ev));
 };
 
 Resizable.prototype.onDrop = function onDrop (ev) {
-	this.elm.classList.remove('resizing');
+	this.elm.classList.remove('grabbed', 'resizing');
 
 	let gripHandler;
 	switch (this.boundDirection) {

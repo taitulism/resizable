@@ -27,7 +27,7 @@ const r = resizable(elm);
 It has the following methods:
 
 ### **.enable() / .disable()**
-Toggle resizability.
+Toggle resizability. When disabled, the main element gets a `'resize-disabled'` classname.
 
 ### **.on(eventName, callback)**
 Listen to drag and drop events:
@@ -52,6 +52,7 @@ Kills the `Resizable` instance for good, unbinds events, releases element refere
 ## ClassNames
 For styling, the main element will be given the following classes:
 * `'resizable'` - from initialization until destruction.
+* `'grabbed'` - when grabbing the element. On mouse down, before moving.
 * `'resizing'` - when moving the element until mouse up.
 
 &nbsp;
