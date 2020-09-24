@@ -666,34 +666,38 @@ describe('resizable', () => {
 	});
 
 	describe('Classnames', () => {
-		it('sets a `resizable` classname on elm', () => {
+		it('sets a `resizable` classname on the element', () => {
 			resizable(target);
 			expect(target.classList.contains('resizable')).to.be.true;
 		});
 
-		it('sets a `grabbed` classname on elm when grabbing it', () => {
+		it('sets a `grabbed` classname on the element when grabbing a grip', () => {
 			rsz = resizable(target);
+
 			expect(target.classList.contains('grabbed')).to.be.false;
 			simulateMouseDown(rsz.bottomRightGrip, box.x, box.y);
 			expect(target.classList.contains('grabbed')).to.be.true;
-			simulateMouseUp(rsz.bottomRightGrip, box.x, box.y);
+			simulateMouseMove(rsz.bottomRightGrip, box.x - 50, box.y - 50);
+			expect(target.classList.contains('grabbed')).to.be.false;
+			simulateMouseUp(rsz.bottomRightGrip, box.x - 50, box.y - 50);
 			expect(target.classList.contains('grabbed')).to.be.false;
 		});
 
-		it('sets a `resizing` classname on elm when grabbing and moving a grip', () => {
+		it('sets a `resizing` classname on the element when moving a grip', () => {
 			rsz = resizable(target);
 
 			expect(target.classList.contains('resizing')).to.be.false;
 			simulateMouseDown(rsz.topLeftGrip, box.x, box.y);
-			expect(target.classList.contains('resizing')).to.be.true;
+			expect(target.classList.contains('resizing')).to.be.false;
 			simulateMouseMove(rsz.topLeftGrip, box.x - 50, box.y - 50);
 			expect(target.classList.contains('resizing')).to.be.true;
 			simulateMouseUp(rsz.topLeftGrip, box.x - 50, box.y - 50);
 			expect(target.classList.contains('resizing')).to.be.false;
 		});
 
-		it('leaves only the `resizable` classname on elm when droping a grip', () => {
+		it('leaves only the `resizable` classname on the element when droping a grip', () => {
 			rsz = resizable(target);
+
 			simulateMouseDown(rsz.bottomRightGrip, box.x, box.y);
 			simulateMouseMove(rsz.bottomRightGrip, box.x, box.y);
 			simulateMouseUp(rsz.bottomRightGrip, box.x, box.y);

@@ -157,12 +157,11 @@ Resizable.prototype.on = function on (eventName, callback) {
 
 Resizable.prototype.onDragStart = function onDragStart (ev) {
 	if (!this.isResizable) return;
+
 	this.startMouseX = ev.clientX;
 	this.startMouseY = ev.clientY;
 
-	this.elm.classList.add('resizing');
 	this.box = this.elm.getBoundingClientRect();
-
 	this.elm.classList.add('grabbed');
 
 	this.bindDraggingHandler(ev.target.classList);
