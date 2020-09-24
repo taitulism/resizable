@@ -193,49 +193,62 @@ Resizable.prototype.onDraggingTopLeft = function onDraggingTopLeft (ev) {
 	const mouseMovedX = this.startMouseX - ev.clientX;
 	const mouseMovedY = this.startMouseY - ev.clientY;
 
-	this.elm.style.width = Math.max(this.minWidth, this.box.width + mouseMovedX) + 'px';
-	this.elm.style.height = Math.max(this.minHeight, this.box.height + mouseMovedY) + 'px';
+	const width = Math.max(this.minWidth, this.box.width + mouseMovedX);
+	const height = Math.max(this.minHeight, this.box.height + mouseMovedY);
+
+	this.elm.style.width = width + 'px';
+	this.elm.style.height = height + 'px';
 	this.elm.style.top = this.box.top - Math.max(mouseMovedY, (this.box.height - this.minHeight) * -1) + 'px';
 	this.elm.style.left = this.box.left - Math.max(mouseMovedX, (this.box.width - this.minWidth) * -1) + 'px';
 
 	this.elm.classList.replace('grabbed', 'resizing');
-	this.events.resizing.forEach(cb => cb(ev));
+	this.events.resizing.forEach(cb => cb(ev, { width, height }));
 };
 
 Resizable.prototype.onDraggingTopRight = function onDraggingTopRight (ev) {
 	const mouseMovedX = ev.clientX - this.startMouseX;
 	const mouseMovedY = this.startMouseY - ev.clientY;
 
-	this.elm.style.width = Math.max(this.minWidth, this.box.width + mouseMovedX) + 'px';
-	this.elm.style.height = Math.max(this.minHeight, this.box.height + mouseMovedY) + 'px';
+	const width = Math.max(this.minWidth, this.box.width + mouseMovedX);
+	const height = Math.max(this.minHeight, this.box.height + mouseMovedY);
+
+	this.elm.style.width = width + 'px';
+	this.elm.style.height = height + 'px';
 	this.elm.style.top = this.box.top - Math.max(mouseMovedY, (this.box.height - this.minHeight) * -1) + 'px';
 
 	this.elm.classList.replace('grabbed', 'resizing');
-	this.events.resizing.forEach(cb => cb(ev));
+
+	this.events.resizing.forEach(cb => cb(ev, { width, height }));
 };
 
 Resizable.prototype.onDraggingBottomRight = function onDraggingBottomRight (ev) {
 	const mouseMovedX = ev.clientX - this.startMouseX;
 	const mouseMovedY = ev.clientY - this.startMouseY;
 
-	this.elm.style.width = Math.max(this.minWidth, this.box.width + mouseMovedX) + 'px';
-	this.elm.style.height = Math.max(this.minHeight, this.box.height + mouseMovedY) + 'px';
+	const width = Math.max(this.minWidth, this.box.width + mouseMovedX);
+	const height = Math.max(this.minHeight, this.box.height + mouseMovedY);
+
+	this.elm.style.width = width + 'px';
+	this.elm.style.height = height + 'px';
 
 	this.elm.classList.replace('grabbed', 'resizing');
-	this.events.resizing.forEach(cb => cb(ev));
+	this.events.resizing.forEach(cb => cb(ev, { width, height }));
 };
 
 Resizable.prototype.onDraggingBottomLeft = function onDraggingBottomLeft (ev) {
 	const mouseMovedX = this.startMouseX - ev.clientX;
 	const mouseMovedY = ev.clientY - this.startMouseY;
 
-	this.elm.style.width = Math.max(this.minWidth, this.box.width + mouseMovedX) + 'px';
-	this.elm.style.height = Math.max(this.minHeight, this.box.height + mouseMovedY) + 'px';
+	const width = Math.max(this.minWidth, this.box.width + mouseMovedX);
+	const height = Math.max(this.minHeight, this.box.height + mouseMovedY);
+
+	this.elm.style.width = width + 'px';
+	this.elm.style.height = height + 'px';
 	this.elm.style.left = this.box.left - Math.max(mouseMovedX, (this.box.width - this.minWidth) * -1) + 'px';
 	this.elm.style.bottom = this.box.bottom - Math.max(mouseMovedY, this.box.height * -1) + 'px';
 
 	this.elm.classList.replace('grabbed', 'resizing');
-	this.events.resizing.forEach(cb => cb(ev));
+	this.events.resizing.forEach(cb => cb(ev, { width, height }));
 };
 
 Resizable.prototype.onDrop = function onDrop (ev) {

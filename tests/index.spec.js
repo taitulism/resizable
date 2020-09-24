@@ -581,6 +581,88 @@ describe('resizable', () => {
 			simulateDragNDrop(rsz.topLeftGrip, -50, -50);
 			expect(fired).to.be.true;
 		});
+
+		describe('`resizing` event `size` object', () => {
+			it('top-left', () => {
+				rsz = resizable(target);
+				let fired = false;
+
+				rsz.on('resizing', (ev, size) => {
+					fired = true;
+					expect(size).to.be.ok;
+					expect(size).to.have.property('width');
+					expect(size).to.have.property('height');
+					expect(size.width).to.equal(130);
+					expect(size.height).to.equal(120);
+				});
+
+				simulateMouseDown(rsz.topLeftGrip, box.x, box.y);
+				expect(fired).to.be.false;
+				simulateMouseMove(rsz.topLeftGrip, box.x - 30, box.y - 20);
+				expect(fired).to.be.true;
+				simulateMouseUp(rsz.topLeftGrip, box.x - 30, box.y - 20);
+			});
+
+			it('top-right', () => {
+				rsz = resizable(target);
+				let fired = false;
+
+				rsz.on('resizing', (ev, size) => {
+					fired = true;
+					expect(size).to.be.ok;
+					expect(size).to.have.property('width');
+					expect(size).to.have.property('height');
+					expect(size.width).to.equal(130);
+					expect(size.height).to.equal(120);
+				});
+
+				simulateMouseDown(rsz.topRightGrip, box.x, box.y);
+				expect(fired).to.be.false;
+				simulateMouseMove(rsz.topRightGrip, box.x + 30, box.y - 20);
+				expect(fired).to.be.true;
+				simulateMouseUp(rsz.topRightGrip, box.x + 30, box.y - 20);
+			});
+
+			it('bottom-right', () => {
+				rsz = resizable(target);
+				let fired = false;
+
+				rsz.on('resizing', (ev, size) => {
+					fired = true;
+					expect(size).to.be.ok;
+					expect(size).to.have.property('width');
+					expect(size).to.have.property('height');
+					expect(size.width).to.equal(130);
+					expect(size.height).to.equal(120);
+				});
+
+				simulateMouseDown(rsz.bottomRightGrip, box.x, box.y);
+				expect(fired).to.be.false;
+				simulateMouseMove(rsz.bottomRightGrip, box.x + 30, box.y + 20);
+				expect(fired).to.be.true;
+				simulateMouseUp(rsz.bottomRightGrip, box.x + 30, box.y + 20);
+			});
+
+			it('bottom-left', () => {
+				rsz = resizable(target);
+				let fired = false;
+
+				rsz.on('resizing', (ev, size) => {
+					fired = true;
+					expect(size).to.be.ok;
+					expect(size).to.have.property('width');
+					expect(size).to.have.property('height');
+					expect(size.width).to.equal(130);
+					expect(size.height).to.equal(120);
+				});
+
+				simulateMouseDown(rsz.bottomLeftGrip, box.x, box.y);
+				expect(fired).to.be.false;
+				simulateMouseMove(rsz.bottomLeftGrip, box.x - 30, box.y + 20);
+				expect(fired).to.be.true;
+				simulateMouseUp(rsz.bottomLeftGrip, box.x - 30, box.y + 20);
+			});
+		});
 	});
 
 	describe('Classnames', () => {

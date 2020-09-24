@@ -37,7 +37,9 @@ Listen to drag and drop events:
 
 Callbacks' first argument is the event object.
 
-> The `resize-end` event has a second argument: the new bounding client rect of the target element (i.e. `elm.getBoundingClientRect()`)
+The `resizing` event has a second argument: a `size` object, `{width, height}`.
+
+The `resize-end` event has a second argument: the new bounding client rect of the target element (i.e. `elm.getBoundingClientRect()`)
 
 **Event Aliases**  
 For extra convenience, anything that contains `start`, `stop`/`end` or `ing` will match its respective event.
