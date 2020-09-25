@@ -5,11 +5,121 @@ export default function resizable (elm, opts) {
 }
 
 const direction = {
-	topLeft: 0,
-	topRight: 1,
-	btmRight: 2,
-	btmLeft: 3,
+	top: 0,
+	right: 1,
+	bottom: 2,
+	left: 3,
+	topLeft: 4,
+	topRight: 5,
+	bottomRight: 6,
+	bottomLeft: 7,
 };
+
+const gripsDefinitions = {
+	[direction.top]: {
+		name: 'top',
+		cursor: 'n',
+		position: 'top',
+		isCorner: false,
+		isXAxis: false,
+		isYAxis: true,
+	},
+
+	[direction.right]: {
+		name: 'right',
+		cursor: 'e',
+		position: 'right',
+		isCorner: false,
+		isXAxis: true,
+		isYAxis: false,
+	},
+
+	[direction.bottom]: {
+		name: 'bottom',
+		cursor: 's',
+		position: 'bottom',
+		isCorner: false,
+		isXAxis: false,
+		isYAxis: true,
+	},
+
+	[direction.left]: {
+		name: 'left',
+		cursor: 'w',
+		position: 'left',
+		isCorner: false,
+		isXAxis: true,
+		isYAxis: false,
+	},
+
+	[direction.topLeft]: {
+		name: 'top-left',
+		cursor: 'nw',
+		position: ['top', 'left'],
+		isCorner: true,
+	},
+
+	[direction.topRight]: {
+		name: 'top-right',
+		cursor: 'ne',
+		position: ['top', 'right'],
+		isCorner: true,
+	},
+
+	[direction.bottomRight]: {
+		name: 'bottom-right',
+		cursor: 'se',
+		position: ['bottom', 'right'],
+		isCorner: true,
+	},
+
+	[direction.bottomLeft]: {
+		name: 'bottom-left',
+		cursor: 'sw',
+		position: ['bottom', 'left'],
+		isCorner: true,
+	},
+};
+
+function getGripCreator (gripSize) {
+	const gripSizePx = gripSize + 'px';
+	const gripOffset = (gripSize / 2 * -1) + 'px';
+
+	return function createGrip (gripDefKey) {
+		const {
+			name,
+			cursor,
+			position,
+			isCorner,
+			isXAxis,
+			isYAxis,
+		} = gripsDefinitions[gripDefKey];
+
+		const grip = document.createElement('div');
+		const gripStyle = grip.style;
+		const gripClassname = `${name}-grip`;
+
+		gripStyle.position = 'absolute';
+		gripStyle.width = isYAxis ? '100%' : gripSizePx;
+		gripStyle.height = isXAxis ? '100%' : gripSizePx;
+		gripStyle.cursor = `${cursor}-resize`;
+		gripStyle.borderRadius = gripSizePx;
+		gripStyle.opacity = '0';
+
+		if (isCorner) {
+			position.forEach((pos) => {
+				gripStyle[pos] = gripOffset;
+			});
+		}
+		else {
+			gripStyle[position] = gripOffset;
+		}
+
+		grip.classList.add('resize-grip', gripClassname);
+
+		return grip;
+	};
+}
 
 function Resizable (elm, opts = {}) {
 	this.showGrips = this.showGrips.bind(this);
@@ -33,10 +143,12 @@ function Resizable (elm, opts = {}) {
 	this.gripOffset = this.gripSize / 2 * -1;
 	this.originalPosition = elm.style.position || null;
 
+	this.initGrips(opts.gripSize, opts.direction);
+
 	this.events = {
 		startResize: [],
 		resizing: [],
-		stopResize: []
+		stopResize: [],
 	};
 
 	const position = elm.style.position || window.getComputedStyle(elm).position;
@@ -57,30 +169,27 @@ function Resizable (elm, opts = {}) {
 		elm.style.height = this.minHeight + 'px';
 	}
 
-	this.topLeftGrip = this.createGrip('top-left-grip');
-	this.topRightGrip = this.createGrip('top-right-grip');
-	this.bottomRightGrip = this.createGrip('bottom-right-grip');
-	this.bottomLeftGrip = this.createGrip('bottom-left-grip');
-
 	elm.classList.add('resizable');
-
-	// this.bindToggleGrips();
 }
 
-// Resizable.prototype.bindToggleGrips = function () {
-// 	this.elm.addEventListener('mouseenter', this.showGrips);
-// 	this.elm.addEventListener('mouseleave', this.hideGrips);
+Resizable.prototype.initGrips = function initGrips (gripSize, gripDirection) {
+	const createGrip = getGripCreator(gripSize || 10);
 
-// 	this.forEachGrip((grip) => {
-// 		grip.addEventListener('mouseenter', this.showGrips);
-// 		grip.addEventListener('mouseleave', this.hideGrips);
-// 	});
-// };
+	if (gripDirection) {
+		this.grip = createGrip(direction[gripDirection]);
+	}
+	else {
+		this.topLeftGrip = createGrip(direction.topLeft);
+		this.topRightGrip = createGrip(direction.topRight);
+		this.bottomRightGrip = createGrip(direction.bottomRight);
+		this.bottomLeftGrip = createGrip(direction.bottomLeft);
+	}
 
-// Resizable.prototype.unbindToggleGrips = function () {
-// 	this.elm.removeEventListener('mouseenter', this.showGrips);
-// 	this.elm.removeEventListener('mouseleave', this.hideGrips);
-// };
+	this.forEachGrip((grip) => {
+		grip.addEventListener('mousedown', this.onDragStart);
+		this.elm.appendChild(grip);
+	});
+};
 
 Resizable.prototype.showGrips = function showGrips () {
 	this.forEachGrip((grip) => {
@@ -94,51 +203,16 @@ Resizable.prototype.hideGrips = function hideGrips () {
 	});
 };
 
-Resizable.prototype.createGrip = function createGrip (className) {
-	const grip = document.createElement('div');
-	grip.classList.add('resize-grip', className);
-	grip.style.position = 'absolute';
-	grip.style.width = this.gripSize + 'px';
-	grip.style.height = this.gripSize + 'px';
-	grip.style.borderRadius = this.gripSize + 'px';
-	grip.style.opacity = '0';
-	grip.addEventListener('mousedown', this.onDragStart);
-
-	switch (className) {
-		case 'top-left-grip':
-			grip.style.top = this.gripOffset + 'px';
-			grip.style.left = this.gripOffset + 'px';
-			grip.style.cursor = 'nw-resize';
-			break;
-		case 'top-right-grip':
-			grip.style.top = this.gripOffset + 'px';
-			grip.style.right = this.gripOffset + 'px';
-			grip.style.cursor = 'ne-resize';
-			break;
-		case 'bottom-right-grip':
-			grip.style.bottom = this.gripOffset + 'px';
-			grip.style.right = this.gripOffset + 'px';
-			grip.style.cursor = 'se-resize';
-			break;
-		case 'bottom-left-grip':
-			grip.style.bottom = this.gripOffset + 'px';
-			grip.style.left = this.gripOffset + 'px';
-			grip.style.cursor = 'sw-resize';
-			break;
-		default:
-			break;
-	}
-
-	this.elm.appendChild(grip);
-
-	return grip;
-};
-
 Resizable.prototype.forEachGrip = function forEachGrip (callback) {
-	callback(this.topLeftGrip);
-	callback(this.topRightGrip);
-	callback(this.bottomRightGrip);
-	callback(this.bottomLeftGrip);
+	if (this.grip) {
+		callback(this.grip);
+	}
+	else {
+		callback(this.topLeftGrip);
+		callback(this.topRightGrip);
+		callback(this.bottomRightGrip);
+		callback(this.bottomLeftGrip);
+	}
 };
 
 Resizable.prototype.on = function on (eventName, callback) {
@@ -179,11 +253,11 @@ Resizable.prototype.bindDraggingHandler = function bindDraggingHandler (classLis
 		document.addEventListener('mousemove', this.onDraggingTopRight);
 	}
 	else if (classList.contains('bottom-right-grip')) {
-		this.boundDirection = direction.btmRight;
+		this.boundDirection = direction.bottomRight;
 		document.addEventListener('mousemove', this.onDraggingBottomRight);
 	}
 	else if (classList.contains('bottom-left-grip')) {
-		this.boundDirection = direction.btmLeft;
+		this.boundDirection = direction.bottomLeft;
 		document.addEventListener('mousemove', this.onDraggingBottomLeft);
 	}
 };
@@ -261,10 +335,10 @@ Resizable.prototype.onDrop = function onDrop (ev) {
 		case direction.topRight:
 			gripHandler = this.onDraggingTopRight;
 			break;
-		case direction.btmRight:
+		case direction.bottomRight:
 			gripHandler = this.onDraggingBottomRight;
 			break;
-		case direction.btmLeft:
+		case direction.bottomLeft:
 			gripHandler = this.onDraggingBottomLeft;
 			break;
 		default:
