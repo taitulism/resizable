@@ -1025,6 +1025,10 @@ describe('resizable', () => {
 				expect(rsz.enable()).to.deep.equal(rsz);
 			});
 		});
+
+		describe('.showGrips() / .hideGrips()', () => {
+			it.skip('toggles grips visibility');
+		});
 	});
 
 	describe('.destroy()', () => {

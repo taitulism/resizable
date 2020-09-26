@@ -143,7 +143,7 @@ function Resizable (elm, opts = {}) {
 }
 
 Resizable.prototype.initMethods = function initMethods () {
-	this.onDragStart = this.onDragStart.bind(this);
+	this.onResizeStart = this.onResizeStart.bind(this);
 
 	this.onDraggingTopLeft = this.onDraggingTopLeft.bind(this);
 	this.onDraggingTopRight = this.onDraggingTopRight.bind(this);
@@ -167,7 +167,7 @@ Resizable.prototype.initGrips = function initGrips (gripSize, gripDirection) {
 	}
 
 	this.forEachGrip((grip) => {
-		grip.addEventListener('mousedown', this.onDragStart);
+		grip.addEventListener('mousedown', this.onResizeStart);
 		this.elm.appendChild(grip);
 	});
 };
@@ -231,7 +231,7 @@ Resizable.prototype.on = function on (eventName, callback) {
 	return this;
 };
 
-Resizable.prototype.onDragStart = function onDragStart (ev) {
+Resizable.prototype.onResizeStart = function onResizeStart (ev) {
 	if (!this.isResizable) return;
 
 	this.startMouseX = ev.clientX;
@@ -240,26 +240,26 @@ Resizable.prototype.onDragStart = function onDragStart (ev) {
 	this.box = this.elm.getBoundingClientRect();
 	this.elm.classList.add('grabbed');
 
-	this.bindDraggingHandler(ev.target.classList);
+	this.bindGripMoveHandler(ev.target.classList);
 	document.addEventListener('mouseup', this.onDrop);
 	this.events.startResize.forEach(cb => cb(ev));
 };
 
-Resizable.prototype.bindDraggingHandler = function bindDraggingHandler (classList) {
+Resizable.prototype.bindGripMoveHandler = function bindGripMoveHandler (classList) {
 	if (classList.contains('top-left-grip')) {
-		this.gripHandler = this.onDraggingTopLeft;
+		this.gripMoveHandler = this.onDraggingTopLeft;
 		document.addEventListener('mousemove', this.onDraggingTopLeft);
 	}
 	else if (classList.contains('top-right-grip')) {
-		this.gripHandler = this.onDraggingTopRight;
+		this.gripMoveHandler = this.onDraggingTopRight;
 		document.addEventListener('mousemove', this.onDraggingTopRight);
 	}
 	else if (classList.contains('bottom-right-grip')) {
-		this.gripHandler = this.onDraggingBottomRight;
+		this.gripMoveHandler = this.onDraggingBottomRight;
 		document.addEventListener('mousemove', this.onDraggingBottomRight);
 	}
 	else if (classList.contains('bottom-left-grip')) {
-		this.gripHandler = this.onDraggingBottomLeft;
+		this.gripMoveHandler = this.onDraggingBottomLeft;
 		document.addEventListener('mousemove', this.onDraggingBottomLeft);
 	}
 };
@@ -329,7 +329,7 @@ Resizable.prototype.onDraggingBottomLeft = function onDraggingBottomLeft (ev) {
 Resizable.prototype.onDrop = function onDrop (ev) {
 	this.elm.classList.remove('grabbed', 'resizing');
 
-	document.removeEventListener('mousemove', this.gripHandler);
+	document.removeEventListener('mousemove', this.gripMoveHandler);
 	document.removeEventListener('mouseup', this.onDrop);
 
 	this.box = null;
@@ -357,7 +357,7 @@ Resizable.prototype.enable = function enable () {
 
 Resizable.prototype.destroy = function destroy () {
 	this.forEachGrip((grip) => {
-		grip.removeEventListener('mousedown', this.onDragStart);
+		grip.removeEventListener('mousedown', this.onResizeStart);
 	});
 
 	this.destroyGrips();
