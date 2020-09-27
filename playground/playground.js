@@ -15,3 +15,4 @@ window.rsz = resizable(targetElm, {
 .on('resizeEnd', () => {
 	console.log('resizeEnd');
 })
+.showGrips()
