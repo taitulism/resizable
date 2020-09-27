@@ -125,12 +125,12 @@ describe('resizable', () => {
 		});
 
 		it('is transparent', () => {
-			const {topLeftGrip, topRightGrip, bottomRightGrip, bottomLeftGrip} = resizable(target);
+			const {topLeft, topRight, bottomRight, bottomLeft} = resizable(target).grips;
 
-			expect(topLeftGrip.style.opacity).to.equal('0');
-			expect(topRightGrip.style.opacity).to.equal('0');
-			expect(bottomRightGrip.style.opacity).to.equal('0');
-			expect(bottomLeftGrip.style.opacity).to.equal('0');
+			expect(topLeft.style.opacity).to.equal('0');
+			expect(topRight.style.opacity).to.equal('0');
+			expect(bottomRight.style.opacity).to.equal('0');
+			expect(bottomLeft.style.opacity).to.equal('0');
 		});
 
 		it.skip('shown when mouse is over target', () => {
@@ -172,13 +172,13 @@ describe('resizable', () => {
 		});
 
 		it('grips are located on the element corners', () => {
-			const {topLeftGrip, topRightGrip, bottomRightGrip, bottomLeftGrip} = resizable(target);
+			const {topLeft, topRight, bottomRight, bottomLeft} = resizable(target).grips;
 			simulateMouseEnter(target, box.x + 25, box.y + 25);
 
-			const topLeftBox = topLeftGrip.getBoundingClientRect();
-			const topRightBox = topRightGrip.getBoundingClientRect();
-			const bottomRightBox = bottomRightGrip.getBoundingClientRect();
-			const bottomLeftBox = bottomLeftGrip.getBoundingClientRect();
+			const topLeftBox = topLeft.getBoundingClientRect();
+			const topRightBox = topRight.getBoundingClientRect();
+			const bottomRightBox = bottomRight.getBoundingClientRect();
+			const bottomLeftBox = bottomLeft.getBoundingClientRect();
 
 			expect(topLeftBox.top).to.equal(box.top - 5);
 			expect(topLeftBox.left).to.equal(box.left - 5);
@@ -194,13 +194,13 @@ describe('resizable', () => {
 		});
 
 		it('default grip size is 10x10', () => {
-			const {topLeftGrip, topRightGrip, bottomRightGrip, bottomLeftGrip} = resizable(target);
+			const {topLeft, topRight, bottomRight, bottomLeft} = resizable(target).grips;
 			simulateMouseEnter(target, box.x + 25, box.y + 25);
 
-			const topLeftBox = topLeftGrip.getBoundingClientRect();
-			const topRightBox = topRightGrip.getBoundingClientRect();
-			const bottomRightBox = bottomRightGrip.getBoundingClientRect();
-			const bottomLeftBox = bottomLeftGrip.getBoundingClientRect();
+			const topLeftBox = topLeft.getBoundingClientRect();
+			const topRightBox = topRight.getBoundingClientRect();
+			const bottomRightBox = bottomRight.getBoundingClientRect();
+			const bottomLeftBox = bottomLeft.getBoundingClientRect();
 
 			expect(topLeftBox.width).to.equal(10);
 			expect(topLeftBox.height).to.equal(10);
@@ -216,21 +216,21 @@ describe('resizable', () => {
 		});
 
 		it('has inline style cursor', () => {
-			const {topLeftGrip, topRightGrip, bottomRightGrip, bottomLeftGrip} = resizable(target);
+			const {topLeft, topRight, bottomRight, bottomLeft} = resizable(target).grips;
 
-			expect(topLeftGrip.style.cursor).to.be.equal('nw-resize');
-			expect(topRightGrip.style.cursor).to.be.equal('ne-resize');
-			expect(bottomRightGrip.style.cursor).to.be.equal('se-resize');
-			expect(bottomLeftGrip.style.cursor).to.be.equal('sw-resize');
+			expect(topLeft.style.cursor).to.be.equal('nw-resize');
+			expect(topRight.style.cursor).to.be.equal('ne-resize');
+			expect(bottomRight.style.cursor).to.be.equal('se-resize');
+			expect(bottomLeft.style.cursor).to.be.equal('sw-resize');
 		});
 	});
 
 	describe('Resizing', () => {
 		describe('top left grip', () => {
 			it('resizes the elm on the X axis', () => {
-				const {topLeftGrip} = resizable(target);
+				const {topLeft} = resizable(target).grips;
 
-				simulateDragNDrop(topLeftGrip, -50, 0);
+				simulateDragNDrop(topLeft, -50, 0);
 				const newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x - 50);
@@ -238,14 +238,14 @@ describe('resizable', () => {
 				expect(newBox.width).to.equal(box.width + 50);
 				expect(newBox.height).to.equal(box.height);
 
-				simulateDragNDrop(topLeftGrip, 50, 0);
+				simulateDragNDrop(topLeft, 50, 0);
 				expect(target.getBoundingClientRect()).to.deep.equal(box);
 			});
 
 			it('resizes the elm on the Y axis', () => {
-				const {topLeftGrip} = resizable(target);
+				const {topLeft} = resizable(target).grips;
 
-				simulateDragNDrop(topLeftGrip, 0, -50);
+				simulateDragNDrop(topLeft, 0, -50);
 				const newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x);
@@ -253,18 +253,18 @@ describe('resizable', () => {
 				expect(newBox.width).to.equal(box.width);
 				expect(newBox.height).to.equal(box.height + 50);
 
-				simulateDragNDrop(topLeftGrip, 0, 50);
+				simulateDragNDrop(topLeft, 0, 50);
 				expect(target.getBoundingClientRect()).to.deep.equal(box);
 			});
 
 			it('resizes the elm freely on both axes', () => {
-				const {topLeftGrip} = resizable(target);
+				const {topLeft} = resizable(target).grips;
 				let newBox;
 
-				simulateMouseDown(topLeftGrip, 0, 0);
+				simulateMouseDown(topLeft, 0, 0);
 
 				// left
-				simulateMouseMove(topLeftGrip, -50, 0);
+				simulateMouseMove(topLeft, -50, 0);
 				newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x - 50);
@@ -273,7 +273,7 @@ describe('resizable', () => {
 				expect(newBox.height).to.equal(box.height);
 
 				// up
-				simulateMouseMove(topLeftGrip, -50, -50);
+				simulateMouseMove(topLeft, -50, -50);
 				newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x - 50);
@@ -282,7 +282,7 @@ describe('resizable', () => {
 				expect(newBox.height).to.equal(box.height + 50);
 
 				// right
-				simulateMouseMove(topLeftGrip, 0, -50);
+				simulateMouseMove(topLeft, 0, -50);
 				newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x);
@@ -291,18 +291,18 @@ describe('resizable', () => {
 				expect(newBox.height).to.equal(box.height + 50);
 
 				// down
-				simulateMouseMove(topLeftGrip, 0, 0);
+				simulateMouseMove(topLeft, 0, 0);
 				expect(target.getBoundingClientRect()).to.deep.equal(box);
 
-				simulateMouseUp(topLeftGrip, 0, 0);
+				simulateMouseUp(topLeft, 0, 0);
 			});
 		});
 
 		describe('top right grip', () => {
 			it('resizes the elm on the X axis', () => {
-				const {topRightGrip} = resizable(target);
+				const {topRight} = resizable(target).grips;
 
-				simulateDragNDrop(topRightGrip, 50, 0);
+				simulateDragNDrop(topRight, 50, 0);
 				const newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x);
@@ -310,14 +310,14 @@ describe('resizable', () => {
 				expect(newBox.width).to.equal(box.width + 50);
 				expect(newBox.height).to.equal(box.height);
 
-				simulateDragNDrop(topRightGrip, -50, 0);
+				simulateDragNDrop(topRight, -50, 0);
 				expect(target.getBoundingClientRect()).to.deep.equal(box);
 			});
 
 			it('resizes the elm on the Y axis', () => {
-				const {topRightGrip} = resizable(target);
+				const {topRight} = resizable(target).grips;
 
-				simulateDragNDrop(topRightGrip, 0, -50);
+				simulateDragNDrop(topRight, 0, -50);
 				const newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x);
@@ -325,18 +325,18 @@ describe('resizable', () => {
 				expect(newBox.width).to.equal(box.width);
 				expect(newBox.height).to.equal(box.height + 50);
 
-				simulateDragNDrop(topRightGrip, 0, 50);
+				simulateDragNDrop(topRight, 0, 50);
 				expect(target.getBoundingClientRect()).to.deep.equal(box);
 			});
 
 			it('resizes the elm freely on both axes', () => {
-				const {topRightGrip} = resizable(target);
+				const {topRight} = resizable(target).grips;
 				let newBox;
 
-				simulateMouseDown(topRightGrip, 0, 0);
+				simulateMouseDown(topRight, 0, 0);
 
 				// right
-				simulateMouseMove(topRightGrip, 50, 0);
+				simulateMouseMove(topRight, 50, 0);
 				newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x);
@@ -345,7 +345,7 @@ describe('resizable', () => {
 				expect(newBox.height).to.equal(box.height);
 
 				// up
-				simulateMouseMove(topRightGrip, 50, -50);
+				simulateMouseMove(topRight, 50, -50);
 				newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x);
@@ -354,7 +354,7 @@ describe('resizable', () => {
 				expect(newBox.height).to.equal(box.height + 50);
 
 				// left
-				simulateMouseMove(topRightGrip, 0, -50);
+				simulateMouseMove(topRight, 0, -50);
 				newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x);
@@ -363,18 +363,18 @@ describe('resizable', () => {
 				expect(newBox.height).to.equal(box.height + 50);
 
 				// down
-				simulateMouseMove(topRightGrip, 0, 0);
+				simulateMouseMove(topRight, 0, 0);
 				expect(target.getBoundingClientRect()).to.deep.equal(box);
 
-				simulateMouseUp(topRightGrip, 0, 0);
+				simulateMouseUp(topRight, 0, 0);
 			});
 		});
 
 		describe('bottom right grip', () => {
 			it('resizes the elm on the X axis', () => {
-				const {bottomRightGrip} = resizable(target);
+				const {bottomRight} = resizable(target).grips;
 
-				simulateDragNDrop(bottomRightGrip, 50, 0);
+				simulateDragNDrop(bottomRight, 50, 0);
 				const newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x);
@@ -382,14 +382,14 @@ describe('resizable', () => {
 				expect(newBox.width).to.equal(box.width + 50);
 				expect(newBox.height).to.equal(box.height);
 
-				simulateDragNDrop(bottomRightGrip, -50, 0);
+				simulateDragNDrop(bottomRight, -50, 0);
 				expect(target.getBoundingClientRect()).to.deep.equal(box);
 			});
 
 			it('resizes the elm on the Y axis', () => {
-				const {bottomRightGrip} = resizable(target);
+				const {bottomRight} = resizable(target).grips;
 
-				simulateDragNDrop(bottomRightGrip, 0, 50);
+				simulateDragNDrop(bottomRight, 0, 50);
 				const newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x);
@@ -397,18 +397,18 @@ describe('resizable', () => {
 				expect(newBox.width).to.equal(box.width);
 				expect(newBox.height).to.equal(box.height + 50);
 
-				simulateDragNDrop(bottomRightGrip, 0, -50);
+				simulateDragNDrop(bottomRight, 0, -50);
 				expect(target.getBoundingClientRect()).to.deep.equal(box);
 			});
 
 			it('resizes the elm freely on both axes', () => {
-				const {bottomRightGrip} = resizable(target);
+				const {bottomRight} = resizable(target).grips;
 				let newBox;
 
-				simulateMouseDown(bottomRightGrip, 0, 0);
+				simulateMouseDown(bottomRight, 0, 0);
 
 				// right
-				simulateMouseMove(bottomRightGrip, 50, 0);
+				simulateMouseMove(bottomRight, 50, 0);
 				newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x);
@@ -417,7 +417,7 @@ describe('resizable', () => {
 				expect(newBox.height).to.equal(box.height);
 
 				// down
-				simulateMouseMove(bottomRightGrip, 50, 50);
+				simulateMouseMove(bottomRight, 50, 50);
 				newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x);
@@ -426,7 +426,7 @@ describe('resizable', () => {
 				expect(newBox.height).to.equal(box.height + 50);
 
 				// left
-				simulateMouseMove(bottomRightGrip, 0, 50);
+				simulateMouseMove(bottomRight, 0, 50);
 				newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x);
@@ -435,18 +435,18 @@ describe('resizable', () => {
 				expect(newBox.height).to.equal(box.height + 50);
 
 				// up
-				simulateMouseMove(bottomRightGrip, 0, 0);
+				simulateMouseMove(bottomRight, 0, 0);
 				expect(target.getBoundingClientRect()).to.deep.equal(box);
 
-				simulateMouseUp(bottomRightGrip, 0, 0);
+				simulateMouseUp(bottomRight, 0, 0);
 			});
 		});
 
 		describe('bottom left grip', () => {
 			it('resizes the elm on the X axis', () => {
-				const {bottomLeftGrip} = resizable(target);
+				const {bottomLeft} = resizable(target).grips;
 
-				simulateDragNDrop(bottomLeftGrip, -50, 0);
+				simulateDragNDrop(bottomLeft, -50, 0);
 				const newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x - 50);
@@ -454,14 +454,14 @@ describe('resizable', () => {
 				expect(newBox.width).to.equal(box.width + 50);
 				expect(newBox.height).to.equal(box.height);
 
-				simulateDragNDrop(bottomLeftGrip, 50, 0);
+				simulateDragNDrop(bottomLeft, 50, 0);
 				expect(target.getBoundingClientRect()).to.deep.equal(box);
 			});
 
 			it('resizes the elm on the Y axis', () => {
-				const {bottomLeftGrip} = resizable(target);
+				const {bottomLeft} = resizable(target).grips;
 
-				simulateDragNDrop(bottomLeftGrip, 0, 50);
+				simulateDragNDrop(bottomLeft, 0, 50);
 				const newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x);
@@ -469,18 +469,18 @@ describe('resizable', () => {
 				expect(newBox.width).to.equal(box.width);
 				expect(newBox.height).to.equal(box.height + 50);
 
-				simulateDragNDrop(bottomLeftGrip, 0, -50);
+				simulateDragNDrop(bottomLeft, 0, -50);
 				expect(target.getBoundingClientRect()).to.deep.equal(box);
 			});
 
 			it('resizes the elm freely on both axes', () => {
-				const {bottomLeftGrip} = resizable(target);
+				const {bottomLeft} = resizable(target).grips;
 				let newBox;
 
-				simulateMouseDown(bottomLeftGrip, 0, 0);
+				simulateMouseDown(bottomLeft, 0, 0);
 
 				// left
-				simulateMouseMove(bottomLeftGrip, -50, 0);
+				simulateMouseMove(bottomLeft, -50, 0);
 				newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x - 50);
@@ -489,7 +489,7 @@ describe('resizable', () => {
 				expect(newBox.height).to.equal(box.height);
 
 				// down
-				simulateMouseMove(bottomLeftGrip, -50, 50);
+				simulateMouseMove(bottomLeft, -50, 50);
 				newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x - 50);
@@ -498,7 +498,7 @@ describe('resizable', () => {
 				expect(newBox.height).to.equal(box.height + 50);
 
 				// right
-				simulateMouseMove(bottomLeftGrip, 0, 50);
+				simulateMouseMove(bottomLeft, 0, 50);
 				newBox = target.getBoundingClientRect();
 
 				expect(newBox.x).to.equal(box.x);
@@ -507,10 +507,10 @@ describe('resizable', () => {
 				expect(newBox.height).to.equal(box.height + 50);
 
 				// up
-				simulateMouseMove(bottomLeftGrip, 0, 0);
+				simulateMouseMove(bottomLeft, 0, 0);
 				expect(target.getBoundingClientRect()).to.deep.equal(box);
 
-				simulateMouseUp(bottomLeftGrip, 0, 0);
+				simulateMouseUp(bottomLeft, 0, 0);
 			});
 		});
 	});
@@ -518,51 +518,54 @@ describe('resizable', () => {
 	describe('Events', () => {
 		it('emits `resize-start` event', () => {
 			rsz = resizable(target);
+			const {bottomRight} = rsz.grips;
 			let fired = false;
 
 			rsz.on('resize-start', (ev) => {
 				fired = true;
 				expect(ev).to.be.instanceOf(Event);
-				expect(ev.target).to.deep.equal(rsz.bottomRightGrip);
+				expect(ev.target).to.deep.equal(bottomRight);
 			});
 
-			simulateMouseDown(rsz.bottomRightGrip, box.x, box.y);
+			simulateMouseDown(bottomRight, box.x, box.y);
 			expect(fired).to.be.true;
-			simulateMouseUp(rsz.bottomRightGrip, box.x, box.y);
+			simulateMouseUp(bottomRight, box.x, box.y);
 		});
 
 		it('emits `resizing` event', () => {
 			rsz = resizable(target);
+			const {bottomLeft} = rsz.grips;
 			let fired = false;
 
 			rsz.on('resizing', (ev) => {
 				fired = true;
 				expect(ev).to.be.instanceOf(Event);
-				expect(ev.target).to.deep.equal(rsz.bottomLeftGrip);
+				expect(ev.target).to.deep.equal(bottomLeft);
 			});
 
-			simulateMouseDown(rsz.bottomLeftGrip, box.x, box.y);
+			simulateMouseDown(bottomLeft, box.x, box.y);
 			expect(fired).to.be.false;
-			simulateMouseMove(rsz.bottomLeftGrip, box.x - 50, (box.y + box.height) + 50);
+			simulateMouseMove(bottomLeft, box.x - 50, (box.y + box.height) + 50);
 			expect(fired).to.be.true;
-			simulateMouseUp(rsz.bottomLeftGrip, box.x - 50, (box.y + box.height) + 50);
+			simulateMouseUp(bottomLeft, box.x - 50, (box.y + box.height) + 50);
 		});
 
 		it('emits `resize-end` event', () => {
 			rsz = resizable(target);
+			const {topLeft} = rsz.grips;
 			let fired = false;
 
 			rsz.on('resize-end', (ev) => {
 				fired = true;
 				expect(ev).to.be.instanceOf(Event);
-				expect(ev.target).to.deep.equal(rsz.topLeftGrip);
+				expect(ev.target).to.deep.equal(topLeft);
 			});
 
-			simulateMouseDown(rsz.topLeftGrip, 0, 0);
+			simulateMouseDown(topLeft, 0, 0);
 			expect(fired).to.be.false;
-			simulateMouseMove(rsz.topLeftGrip, -50, -50);
+			simulateMouseMove(topLeft, -50, -50);
 			expect(fired).to.be.false;
-			simulateMouseUp(rsz.topLeftGrip, -50, -50);
+			simulateMouseUp(topLeft, -50, -50);
 			expect(fired).to.be.true;
 		});
 
@@ -578,13 +581,14 @@ describe('resizable', () => {
 				expect(newBox.height).to.equal(box.height + 50);
 			});
 
-			simulateDragNDrop(rsz.topLeftGrip, -50, -50);
+			simulateDragNDrop(rsz.grips.topLeft, -50, -50);
 			expect(fired).to.be.true;
 		});
 
 		describe('`resizing` event `size` object', () => {
 			it('top-left', () => {
 				rsz = resizable(target);
+				const {topLeft} = rsz.grips;
 				let fired = false;
 
 				rsz.on('resizing', (ev, size) => {
@@ -596,15 +600,16 @@ describe('resizable', () => {
 					expect(size.height).to.equal(120);
 				});
 
-				simulateMouseDown(rsz.topLeftGrip, box.x, box.y);
+				simulateMouseDown(topLeft, box.x, box.y);
 				expect(fired).to.be.false;
-				simulateMouseMove(rsz.topLeftGrip, box.x - 30, box.y - 20);
+				simulateMouseMove(topLeft, box.x - 30, box.y - 20);
 				expect(fired).to.be.true;
-				simulateMouseUp(rsz.topLeftGrip, box.x - 30, box.y - 20);
+				simulateMouseUp(topLeft, box.x - 30, box.y - 20);
 			});
 
 			it('top-right', () => {
 				rsz = resizable(target);
+				const {topRight} = rsz.grips;
 				let fired = false;
 
 				rsz.on('resizing', (ev, size) => {
@@ -616,15 +621,16 @@ describe('resizable', () => {
 					expect(size.height).to.equal(120);
 				});
 
-				simulateMouseDown(rsz.topRightGrip, box.x, box.y);
+				simulateMouseDown(topRight, box.x, box.y);
 				expect(fired).to.be.false;
-				simulateMouseMove(rsz.topRightGrip, box.x + 30, box.y - 20);
+				simulateMouseMove(topRight, box.x + 30, box.y - 20);
 				expect(fired).to.be.true;
-				simulateMouseUp(rsz.topRightGrip, box.x + 30, box.y - 20);
+				simulateMouseUp(topRight, box.x + 30, box.y - 20);
 			});
 
 			it('bottom-right', () => {
 				rsz = resizable(target);
+				const {bottomRight} = rsz.grips;
 				let fired = false;
 
 				rsz.on('resizing', (ev, size) => {
@@ -636,15 +642,16 @@ describe('resizable', () => {
 					expect(size.height).to.equal(120);
 				});
 
-				simulateMouseDown(rsz.bottomRightGrip, box.x, box.y);
+				simulateMouseDown(bottomRight, box.x, box.y);
 				expect(fired).to.be.false;
-				simulateMouseMove(rsz.bottomRightGrip, box.x + 30, box.y + 20);
+				simulateMouseMove(bottomRight, box.x + 30, box.y + 20);
 				expect(fired).to.be.true;
-				simulateMouseUp(rsz.bottomRightGrip, box.x + 30, box.y + 20);
+				simulateMouseUp(bottomRight, box.x + 30, box.y + 20);
 			});
 
 			it('bottom-left', () => {
 				rsz = resizable(target);
+				const {bottomLeft} = rsz.grips;
 				let fired = false;
 
 				rsz.on('resizing', (ev, size) => {
@@ -656,11 +663,11 @@ describe('resizable', () => {
 					expect(size.height).to.equal(120);
 				});
 
-				simulateMouseDown(rsz.bottomLeftGrip, box.x, box.y);
+				simulateMouseDown(bottomLeft, box.x, box.y);
 				expect(fired).to.be.false;
-				simulateMouseMove(rsz.bottomLeftGrip, box.x - 30, box.y + 20);
+				simulateMouseMove(bottomLeft, box.x - 30, box.y + 20);
 				expect(fired).to.be.true;
-				simulateMouseUp(rsz.bottomLeftGrip, box.x - 30, box.y + 20);
+				simulateMouseUp(bottomLeft, box.x - 30, box.y + 20);
 			});
 		});
 	});
@@ -673,34 +680,37 @@ describe('resizable', () => {
 
 		it('sets a `grabbed` classname on the element when grabbing a grip', () => {
 			rsz = resizable(target);
+			const {bottomRight} = rsz.grips;
 
 			expect(target.classList.contains('grabbed')).to.be.false;
-			simulateMouseDown(rsz.bottomRightGrip, box.x, box.y);
+			simulateMouseDown(bottomRight, box.x, box.y);
 			expect(target.classList.contains('grabbed')).to.be.true;
-			simulateMouseMove(rsz.bottomRightGrip, box.x - 50, box.y - 50);
+			simulateMouseMove(bottomRight, box.x - 50, box.y - 50);
 			expect(target.classList.contains('grabbed')).to.be.false;
-			simulateMouseUp(rsz.bottomRightGrip, box.x - 50, box.y - 50);
+			simulateMouseUp(bottomRight, box.x - 50, box.y - 50);
 			expect(target.classList.contains('grabbed')).to.be.false;
 		});
 
 		it('sets a `resizing` classname on the element when moving a grip', () => {
 			rsz = resizable(target);
+			const {topLeft} = rsz.grips;
 
 			expect(target.classList.contains('resizing')).to.be.false;
-			simulateMouseDown(rsz.topLeftGrip, box.x, box.y);
+			simulateMouseDown(topLeft, box.x, box.y);
 			expect(target.classList.contains('resizing')).to.be.false;
-			simulateMouseMove(rsz.topLeftGrip, box.x - 50, box.y - 50);
+			simulateMouseMove(topLeft, box.x - 50, box.y - 50);
 			expect(target.classList.contains('resizing')).to.be.true;
-			simulateMouseUp(rsz.topLeftGrip, box.x - 50, box.y - 50);
+			simulateMouseUp(topLeft, box.x - 50, box.y - 50);
 			expect(target.classList.contains('resizing')).to.be.false;
 		});
 
 		it('leaves only the `resizable` classname on the element when droping a grip', () => {
 			rsz = resizable(target);
+			const {bottomRight} = rsz.grips;
 
-			simulateMouseDown(rsz.bottomRightGrip, box.x, box.y);
-			simulateMouseMove(rsz.bottomRightGrip, box.x, box.y);
-			simulateMouseUp(rsz.bottomRightGrip, box.x, box.y);
+			simulateMouseDown(bottomRight, box.x, box.y);
+			simulateMouseMove(bottomRight, box.x, box.y);
+			simulateMouseUp(bottomRight, box.x, box.y);
 			expect(target.classList.contains('resizable')).to.be.true;
 			expect(target.classList.length).to.equal(1);
 		});
@@ -726,16 +736,16 @@ describe('resizable', () => {
 
 	describe('Options', () => {
 		describe('minWidth', () => {
-			it('limits the element minimum width (topLeftGrip)', () => {
-				const {topLeftGrip} = resizable(target, {minWidth: 70});
+			it('limits the element minimum width (topLeft grip)', () => {
+				const {topLeft} = resizable(target, {minWidth: 70}).grips;
 
-				simulateDragNDrop(topLeftGrip, 20, 20);
+				simulateDragNDrop(topLeft, 20, 20);
 				const newBox1 = target.getBoundingClientRect();
 
 				expect(newBox1.width).to.equal(box.width - 20);
 				expect(newBox1.height).to.equal(box.height - 20);
 
-				simulateDragNDrop(topLeftGrip, 20, 20);
+				simulateDragNDrop(topLeft, 20, 20);
 				const newBox2 = target.getBoundingClientRect();
 
 				expect(newBox2.width).to.equal(box.width - 30);
@@ -743,48 +753,48 @@ describe('resizable', () => {
 				expect(newBox2.x).to.equal(box.x + 30);
 			});
 
-			it('limits the element minimum width (topRightGrip)', () => {
-				const {topRightGrip} = resizable(target, {minWidth: 70});
+			it('limits the element minimum width (topRight grip)', () => {
+				const {topRight} = resizable(target, {minWidth: 70}).grips;
 
-				simulateDragNDrop(topRightGrip, -20, 20);
+				simulateDragNDrop(topRight, -20, 20);
 				const newBox1 = target.getBoundingClientRect();
 
 				expect(newBox1.width).to.equal(box.width - 20);
 				expect(newBox1.height).to.equal(box.height - 20);
 
-				simulateDragNDrop(topRightGrip, -20, 20);
+				simulateDragNDrop(topRight, -20, 20);
 				const newBox2 = target.getBoundingClientRect();
 
 				expect(newBox2.width).to.equal(box.width - 30);
 				expect(newBox2.height).to.equal(box.height - 40);
 			});
 
-			it('limits the element minimum width (bottomRightGrip)', () => {
-				const {bottomRightGrip} = resizable(target, {minWidth: 70});
+			it('limits the element minimum width (bottomRight grip)', () => {
+				const {bottomRight} = resizable(target, {minWidth: 70}).grips;
 
-				simulateDragNDrop(bottomRightGrip, -20, -20);
+				simulateDragNDrop(bottomRight, -20, -20);
 				const newBox1 = target.getBoundingClientRect();
 
 				expect(newBox1.width).to.equal(box.width - 20);
 				expect(newBox1.height).to.equal(box.height - 20);
 
-				simulateDragNDrop(bottomRightGrip, -20, -20);
+				simulateDragNDrop(bottomRight, -20, -20);
 				const newBox2 = target.getBoundingClientRect();
 
 				expect(newBox2.width).to.equal(box.width - 30);
 				expect(newBox2.height).to.equal(box.height - 40);
 			});
 
-			it('limits the element minimum width (bottomLeftGrip)', () => {
-				const {bottomLeftGrip} = resizable(target, {minWidth: 70});
+			it('limits the element minimum width (bottomLeft grip)', () => {
+				const {bottomLeft} = resizable(target, {minWidth: 70}).grips;
 
-				simulateDragNDrop(bottomLeftGrip, 20, -20);
+				simulateDragNDrop(bottomLeft, 20, -20);
 				const newBox1 = target.getBoundingClientRect();
 
 				expect(newBox1.width).to.equal(box.width - 20);
 				expect(newBox1.height).to.equal(box.height - 20);
 
-				simulateDragNDrop(bottomLeftGrip, 20, -20);
+				simulateDragNDrop(bottomLeft, 20, -20);
 				const newBox2 = target.getBoundingClientRect();
 
 				expect(newBox2.width).to.equal(box.width - 30);
@@ -801,16 +811,16 @@ describe('resizable', () => {
 		});
 
 		describe('minHeight', () => {
-			it('limits the element minimum height (topLeftGrip)', () => {
-				const {topLeftGrip} = resizable(target, {minHeight: 70});
+			it('limits the element minimum height (topLeft grip)', () => {
+				const {topLeft} = resizable(target, {minHeight: 70}).grips;
 
-				simulateDragNDrop(topLeftGrip, 20, 20);
+				simulateDragNDrop(topLeft, 20, 20);
 				const newBox1 = target.getBoundingClientRect();
 
 				expect(newBox1.width).to.equal(box.width - 20);
 				expect(newBox1.height).to.equal(box.height - 20);
 
-				simulateDragNDrop(topLeftGrip, 20, 20);
+				simulateDragNDrop(topLeft, 20, 20);
 				const newBox2 = target.getBoundingClientRect();
 
 				expect(newBox2.width).to.equal(box.width - 40);
@@ -818,16 +828,16 @@ describe('resizable', () => {
 				expect(newBox2.y).to.equal(box.y + 30);
 			});
 
-			it('limits the element minimum height (topRightGrip)', () => {
-				const {topRightGrip} = resizable(target, {minHeight: 70});
+			it('limits the element minimum height (topRight grip)', () => {
+				const {topRight} = resizable(target, {minHeight: 70}).grips;
 
-				simulateDragNDrop(topRightGrip, -20, 20);
+				simulateDragNDrop(topRight, -20, 20);
 				const newBox1 = target.getBoundingClientRect();
 
 				expect(newBox1.width).to.equal(box.width - 20);
 				expect(newBox1.height).to.equal(box.height - 20);
 
-				simulateDragNDrop(topRightGrip, -20, 20);
+				simulateDragNDrop(topRight, -20, 20);
 				const newBox2 = target.getBoundingClientRect();
 
 				expect(newBox2.width).to.equal(box.width - 40);
@@ -835,32 +845,32 @@ describe('resizable', () => {
 				expect(newBox2.y).to.equal(box.y + 30);
 			});
 
-			it('limits the element minimum height (bottomRightGrip)', () => {
-				const {bottomRightGrip} = resizable(target, {minHeight: 70});
+			it('limits the element minimum height (bottomRight grip)', () => {
+				const {bottomRight} = resizable(target, {minHeight: 70}).grips;
 
-				simulateDragNDrop(bottomRightGrip, -20, -20);
+				simulateDragNDrop(bottomRight, -20, -20);
 				const newBox1 = target.getBoundingClientRect();
 
 				expect(newBox1.width).to.equal(box.width - 20);
 				expect(newBox1.height).to.equal(box.height - 20);
 
-				simulateDragNDrop(bottomRightGrip, -20, -20);
+				simulateDragNDrop(bottomRight, -20, -20);
 				const newBox2 = target.getBoundingClientRect();
 
 				expect(newBox2.width).to.equal(box.width - 40);
 				expect(newBox2.height).to.equal(box.height - 30);
 			});
 
-			it('limits the element minimum height (bottomLeftGrip)', () => {
-				const {bottomLeftGrip} = resizable(target, {minHeight: 70});
+			it('limits the element minimum height (bottomLeft grip)', () => {
+				const {bottomLeft} = resizable(target, {minHeight: 70}).grips;
 
-				simulateDragNDrop(bottomLeftGrip, 20, -20);
+				simulateDragNDrop(bottomLeft, 20, -20);
 				const newBox1 = target.getBoundingClientRect();
 
 				expect(newBox1.width).to.equal(box.width - 20);
 				expect(newBox1.height).to.equal(box.height - 20);
 
-				simulateDragNDrop(bottomLeftGrip, 20, -20);
+				simulateDragNDrop(bottomLeft, 20, -20);
 				const newBox2 = target.getBoundingClientRect();
 
 				expect(newBox2.width).to.equal(box.width - 40);
@@ -878,13 +888,13 @@ describe('resizable', () => {
 		describe('gripSize', () => {
 			it('sets the grip elements square size', () => {
 				const rsz = resizable(target, {gripSize: 40});
-				const {topLeftGrip, topRightGrip, bottomRightGrip, bottomLeftGrip} = rsz;
+				const {topLeft, topRight, bottomRight, bottomLeft} = rsz.grips;
 				simulateMouseEnter(target, box.x + 25, box.y + 25);
 
-				const topLeftBox = topLeftGrip.getBoundingClientRect();
-				const topRightBox = topRightGrip.getBoundingClientRect();
-				const bottomRightBox = bottomRightGrip.getBoundingClientRect();
-				const bottomLeftBox = bottomLeftGrip.getBoundingClientRect();
+				const topLeftBox = topLeft.getBoundingClientRect();
+				const topRightBox = topRight.getBoundingClientRect();
+				const bottomRightBox = bottomRight.getBoundingClientRect();
+				const bottomLeftBox = bottomLeft.getBoundingClientRect();
 
 				expect(topLeftBox.width).to.equal(40);
 				expect(topLeftBox.height).to.equal(40);
@@ -975,8 +985,9 @@ describe('resizable', () => {
 		describe('.enable() / .disable()', () => {
 			it('toggles resizability', () => {
 				rsz = resizable(target);
+				const {bottomRight} = rsz.grips;
 
-				simulateDragNDrop(rsz.bottomRightGrip, 50, 50);
+				simulateDragNDrop(bottomRight, 50, 50);
 				const newBox1 = target.getBoundingClientRect();
 
 				expect(newBox1.width).to.equal(box.width + 50);
@@ -984,7 +995,7 @@ describe('resizable', () => {
 
 				rsz.disable();
 
-				simulateDragNDrop(rsz.bottomRightGrip, -50, -50);
+				simulateDragNDrop(bottomRight, -50, -50);
 				const newBox2 = target.getBoundingClientRect();
 
 				expect(newBox2.width).to.equal(newBox1.width);
@@ -992,7 +1003,7 @@ describe('resizable', () => {
 
 				rsz.enable();
 
-				simulateDragNDrop(rsz.bottomRightGrip, -50, -50);
+				simulateDragNDrop(bottomRight, -50, -50);
 				const newBox3 = target.getBoundingClientRect();
 
 				expect(newBox3.width).to.equal(box.width);
@@ -1011,12 +1022,13 @@ describe('resizable', () => {
 
 			it('hides the grips', () => {
 				rsz = resizable(target);
+				const {topLeft} = rsz.grips;
 
-				expect(rsz.topLeftGrip.style.display).not.to.equal('none');
+				expect(topLeft.style.display).not.to.equal('none');
 				rsz.disable();
-				expect(rsz.topLeftGrip.style.display).to.equal('none');
+				expect(topLeft.style.display).to.equal('none');
 				rsz.enable();
-				expect(rsz.topLeftGrip.style.display).not.to.equal('none');
+				expect(topLeft.style.display).not.to.equal('none');
 			});
 
 			it('is chainable', () => {
@@ -1059,7 +1071,7 @@ describe('resizable', () => {
 
 		it('removes all listeners', () => {
 			rsz = resizable(target);
-			const {topRightGrip} = rsz;
+			const {topRight} = rsz.grips;
 
 			let resizeStartCount = 0;
 			let resizingCount = 0;
@@ -1070,43 +1082,43 @@ describe('resizable', () => {
 			rsz.on('end', () => resizeEndCount++);
 
 			expect(resizeStartCount).to.equal(0);
-			simulateMouseDown(topRightGrip, box.x, box.y);
+			simulateMouseDown(topRight, box.x, box.y);
 			expect(resizeStartCount).to.equal(1);
 
 			expect(resizingCount).to.equal(0);
-			simulateMouseMove(topRightGrip, box.x + 25, box.y - 25);
+			simulateMouseMove(topRight, box.x + 25, box.y - 25);
 			expect(resizingCount).to.equal(1);
 
 			expect(resizeEndCount).to.equal(0);
-			simulateMouseUp(topRightGrip, box.x + 75, box.y - 75);
+			simulateMouseUp(topRight, box.x + 75, box.y - 75);
 			expect(resizeEndCount).to.equal(1);
 
-			simulateMouseMove(topRightGrip, box.x + 100, box.y - 100);
+			simulateMouseMove(topRight, box.x + 100, box.y - 100);
 			expect(resizeStartCount).to.equal(1);
 			expect(resizingCount).to.equal(1);
 			expect(resizeEndCount).to.equal(1);
 
 			rsz.destroy();
 
-			simulateMouseDown(topRightGrip, box.x + 100, box.y - 100);
+			simulateMouseDown(topRight, box.x + 100, box.y - 100);
 			expect(resizeStartCount).to.equal(1);
 
-			simulateMouseMove(topRightGrip, box.x + 125, box.y - 125);
+			simulateMouseMove(topRight, box.x + 125, box.y - 125);
 			expect(resizingCount).to.equal(1);
 
-			simulateMouseUp(topRightGrip, box.x + 150, box.y - 150);
+			simulateMouseUp(topRight, box.x + 150, box.y - 150);
 			expect(resizeEndCount).to.equal(1);
 		});
 
 		it('removes all classnames', () => {
 			rsz = resizable(target);
-			const {topLeftGrip} = rsz;
+			const {topLeft} = rsz.grips;
 
-			simulateMouseDown(topLeftGrip, 25, 25);
-			simulateMouseMove(topLeftGrip, 25, 25);
-			simulateMouseMove(topLeftGrip, 50, 50);
-			simulateMouseUp(topLeftGrip, 50, 50);
-			simulateMouseMove(topLeftGrip, 75, 75);
+			simulateMouseDown(topLeft, 25, 25);
+			simulateMouseMove(topLeft, 25, 25);
+			simulateMouseMove(topLeft, 50, 50);
+			simulateMouseUp(topLeft, 50, 50);
+			simulateMouseMove(topLeft, 75, 75);
 
 			rsz.destroy();
 			simulateMouseDown(target, 100, 100);

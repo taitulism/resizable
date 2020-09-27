@@ -65,7 +65,7 @@ const gripsDefinitions = {
 	},
 
 	[direction.topLeft]: {
-		propName: 'topLeftGrip',
+		propName: 'topLeft',
 		name: 'top-left',
 		cursor: 'nw',
 		position: ['top', 'left'],
@@ -88,7 +88,7 @@ const gripsDefinitions = {
 	},
 
 	[direction.topRight]: {
-		propName: 'topRightGrip',
+		propName: 'topRight',
 		name: 'top-right',
 		cursor: 'ne',
 		position: ['top', 'right'],
@@ -111,7 +111,7 @@ const gripsDefinitions = {
 	},
 
 	[direction.bottomRight]: {
-		propName: 'bottomRightGrip',
+		propName: 'bottomRight',
 		name: 'bottom-right',
 		cursor: 'se',
 		position: ['bottom', 'right'],
@@ -132,7 +132,7 @@ const gripsDefinitions = {
 	},
 
 	[direction.bottomLeft]: {
-		propName: 'bottomLeftGrip',
+		propName: 'bottomLeft',
 		name: 'bottom-left',
 		cursor: 'sw',
 		position: ['bottom', 'left'],
@@ -207,6 +207,8 @@ function Resizable (elm, opts = {}) {
 	this.originalPosition = elm.style.position || null;
 	this.destructionQueue = [];
 	this.unbindMouseMove = null;
+	this.grip = null;
+	this.grips = {};
 
 	this.events = {
 		startResize: [],
@@ -228,8 +230,8 @@ Resizable.prototype.initGrips = function initGrips (gripSize, gripDirection) {
 	const createGrip = getGripCreator(gripSize || 10);
 
 	if (gripDirection) {
-		const {propName, elm, moveHandler} = createGrip(direction[gripDirection]);
-		this[propName] = elm;
+		const {elm, moveHandler} = createGrip(direction[gripDirection]);
+		this.grip = elm;
 		this.elm.appendChild(elm);
 
 		const unbind = bindListener(elm, 'mousedown', (ev) => {
@@ -246,7 +248,7 @@ Resizable.prototype.initGrips = function initGrips (gripSize, gripDirection) {
 			direction.bottomLeft,
 		].forEach((gripDir) => {
 			const {propName, elm, moveHandler} = createGrip(gripDir);
-			this[propName] = elm;
+			this.grips[propName] = elm;
 			this.elm.appendChild(elm);
 
 			const unbind = bindListener(elm, 'mousedown', (ev) => {
@@ -296,10 +298,10 @@ Resizable.prototype.forEachGrip = function forEachGrip (callback) {
 		callback(this.grip);
 	}
 	else {
-		callback(this.topLeftGrip);
-		callback(this.topRightGrip);
-		callback(this.bottomRightGrip);
-		callback(this.bottomLeftGrip);
+		callback(this.grips.topLeft);
+		callback(this.grips.topRight);
+		callback(this.grips.bottomRight);
+		callback(this.grips.bottomLeft);
 	}
 };
 
@@ -383,8 +385,5 @@ Resizable.prototype.destroyGrips = function destroyGrips () {
 	this.forEachGrip((grip) => {
 		this.elm.removeChild(grip);
 	});
-	this.topLeftGrip = null;
-	this.topRightGrip = null;
-	this.bottomRightGrip = null;
-	this.bottomLeftGrip = null;
+	this.grips = null;
 };
