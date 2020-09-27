@@ -4,12 +4,30 @@ export default function resizable (elm, opts) {
 	return new Resizable(elm, opts);
 }
 
+const px = 'px';
+
 function bindListener (elm, eventName, callback) {
 	elm.addEventListener(eventName, callback, false);
 
 	return function off () {
 		elm.removeEventListener(eventName, callback, false);
 	};
+}
+
+function calculateWidth (width, diff, minWidth) {
+	return Math.max(width - diff, minWidth);
+}
+
+function calculateHeight (height, diff, minHeight) {
+	return Math.max(height - diff, minHeight);
+}
+
+function calculateLeft (left, minWidth, width, mouseDiff) {
+	return left + Math.min(mouseDiff, width - minWidth);
+}
+
+function calculateTop (top, minHeight, height, mouseDiff) {
+	return top + Math.min(mouseDiff, height - minHeight);
 }
 
 const direction = {
@@ -70,20 +88,13 @@ const gripsDefinitions = {
 		cursor: 'nw',
 		position: ['top', 'left'],
 		isCorner: true,
-		moveHandler (ev) {
-			const mouseMovedX = this.startMouseX - ev.clientX;
-			const mouseMovedY = this.startMouseY - ev.clientY;
-
-			const width = Math.max(this.minWidth, this.box.width + mouseMovedX);
-			const height = Math.max(this.minHeight, this.box.height + mouseMovedY);
-
-			this.elm.style.width = width + 'px';
-			this.elm.style.height = height + 'px';
-			this.elm.style.top = this.box.top - Math.max(mouseMovedY, (this.box.height - this.minHeight) * -1) + 'px';
-			this.elm.style.left = this.box.left - Math.max(mouseMovedX, (this.box.width - this.minWidth) * -1) + 'px';
-
-			this.elm.classList.replace('grabbed', 'resizing');
-			this.events.resizing.forEach(cb => cb(ev, { width, height }));
+		moveHandler (startBox, XDiff, YDiff) {
+			return {
+				width: calculateWidth(startBox.width, XDiff, this.minWidth),
+				height: calculateHeight(startBox.height, YDiff, this.minHeight),
+				left: calculateLeft(startBox.left, this.minWidth, startBox.width, XDiff),
+				top: calculateTop(startBox.top, this.minHeight, startBox.height, YDiff),
+			};
 		}
 	},
 
@@ -93,20 +104,12 @@ const gripsDefinitions = {
 		cursor: 'ne',
 		position: ['top', 'right'],
 		isCorner: true,
-		moveHandler (ev) {
-			const mouseMovedX = ev.clientX - this.startMouseX;
-			const mouseMovedY = this.startMouseY - ev.clientY;
-
-			const width = Math.max(this.minWidth, this.box.width + mouseMovedX);
-			const height = Math.max(this.minHeight, this.box.height + mouseMovedY);
-
-			this.elm.style.width = width + 'px';
-			this.elm.style.height = height + 'px';
-			this.elm.style.top = this.box.top - Math.max(mouseMovedY, (this.box.height - this.minHeight) * -1) + 'px';
-
-			this.elm.classList.replace('grabbed', 'resizing');
-
-			this.events.resizing.forEach(cb => cb(ev, { width, height }));
+		moveHandler (startBox, XDiff, YDiff) {
+			return {
+				width: calculateWidth(startBox.width, -XDiff, this.minWidth),
+				height: calculateHeight(startBox.height, YDiff, this.minHeight),
+				top: calculateTop(startBox.top, this.minHeight, startBox.height, YDiff),
+			};
 		}
 	},
 
@@ -116,18 +119,11 @@ const gripsDefinitions = {
 		cursor: 'se',
 		position: ['bottom', 'right'],
 		isCorner: true,
-		moveHandler (ev) {
-			const mouseMovedX = ev.clientX - this.startMouseX;
-			const mouseMovedY = ev.clientY - this.startMouseY;
-
-			const width = Math.max(this.minWidth, this.box.width + mouseMovedX);
-			const height = Math.max(this.minHeight, this.box.height + mouseMovedY);
-
-			this.elm.style.width = width + 'px';
-			this.elm.style.height = height + 'px';
-
-			this.elm.classList.replace('grabbed', 'resizing');
-			this.events.resizing.forEach(cb => cb(ev, { width, height }));
+		moveHandler (startBox, XDiff, YDiff) {
+			return {
+				width: calculateWidth(startBox.width, -XDiff, this.minWidth),
+				height: calculateHeight(startBox.height, -YDiff, this.minHeight),
+			};
 		}
 	},
 
@@ -137,27 +133,19 @@ const gripsDefinitions = {
 		cursor: 'sw',
 		position: ['bottom', 'left'],
 		isCorner: true,
-		moveHandler (ev) {
-			const mouseMovedX = this.startMouseX - ev.clientX;
-			const mouseMovedY = ev.clientY - this.startMouseY;
-
-			const width = Math.max(this.minWidth, this.box.width + mouseMovedX);
-			const height = Math.max(this.minHeight, this.box.height + mouseMovedY);
-
-			this.elm.style.width = width + 'px';
-			this.elm.style.height = height + 'px';
-			this.elm.style.left = this.box.left - Math.max(mouseMovedX, (this.box.width - this.minWidth) * -1) + 'px';
-			this.elm.style.bottom = this.box.bottom - Math.max(mouseMovedY, this.box.height * -1) + 'px';
-
-			this.elm.classList.replace('grabbed', 'resizing');
-			this.events.resizing.forEach(cb => cb(ev, { width, height }));
+		moveHandler (startBox, XDiff, YDiff) {
+			return {
+				width: calculateWidth(startBox.width, XDiff, this.minWidth),
+				height: calculateHeight(startBox.height, -YDiff, this.minHeight),
+				left: calculateLeft(startBox.left, this.minWidth, startBox.width, XDiff),
+			};
 		}
 	},
 };
 
 function getGripCreator (gripSize) {
-	const gripSizePx = gripSize + 'px';
-	const gripOffset = (gripSize / 2 * -1) + 'px';
+	const gripSizePx = gripSize + px;
+	const gripOffset = (gripSize / 2 * -1) + px;
 
 	return function createGrip (gripDefKey) {
 		const {
@@ -200,8 +188,6 @@ function getGripCreator (gripSize) {
 function Resizable (elm, opts = {}) {
 	this.minWidth = opts.minWidth || 0;
 	this.minHeight = opts.minHeight || 0;
-	this.startMouseX = 0;
-	this.startMouseY = 0;
 	this.elm = elm;
 	this.isResizable = true;
 	this.originalPosition = elm.style.position || null;
@@ -266,16 +252,16 @@ Resizable.prototype.initElm = function initElm (elm) {
 
 	if (position !== 'absolute') {
 		elm.style.position = 'absolute';
-		elm.style.top = box.top + 'px';
-		elm.style.left = box.left + 'px';
+		elm.style.top = box.top + px;
+		elm.style.left = box.left + px;
 	}
 
 	if (box.width < this.minWidth) {
-		elm.style.width = this.minWidth + 'px';
+		elm.style.width = this.minWidth + px;
 	}
 
 	if (box.height < this.minHeight) {
-		elm.style.height = this.minHeight + 'px';
+		elm.style.height = this.minHeight + px;
 	}
 
 	elm.classList.add('resizable');
@@ -319,34 +305,52 @@ Resizable.prototype.on = function on (eventName, callback) {
 	return this;
 };
 
-Resizable.prototype.onResizeStart = function onResizeStart (ev, moveHandler) {
+Resizable.prototype.onResizeStart = function onResizeStart (startEvent, moveHandler) {
 	if (!this.isResizable) return;
 
-	this.startMouseX = ev.clientX;
-	this.startMouseY = ev.clientY;
+	const startMouseX = startEvent.clientX;
+	const startMouseY = startEvent.clientY;
 
-	this.box = this.elm.getBoundingClientRect();
+	const startBox = this.elm.getBoundingClientRect();
 	this.elm.classList.add('grabbed');
 
 	this.unbindMouseMove && this.unbindMouseMove();
 	this.unbindMouseMove = bindListener(document, 'mousemove', (moveEvent) => {
-		moveHandler.call(this, moveEvent);
+		const XDiff = moveEvent.clientX - startMouseX;
+		const YDiff = moveEvent.clientY - startMouseY;
+
+		const newBox = moveHandler.call(this, startBox, XDiff, YDiff);
+		this.updateElm(newBox);
+		this.elm.classList.replace('grabbed', 'resizing');
+		this.events.resizing.forEach(cb => cb(moveEvent, {
+			width: newBox.width,
+			height: newBox.height,
+		}));
+
 		moveEvent.preventDefault();
 	});
 
 	document.addEventListener('mouseup', this.onDrop);
-	this.events.startResize.forEach(cb => cb(ev));
+	this.events.startResize.forEach(cb => cb(startEvent));
 };
 
-Resizable.prototype.onDrop = function onDrop (ev) {
+Resizable.prototype.updateElm = function updateElm ({width, height, top, left}) {
+	const elmStyle = this.elm.style;
+
+	if (width) elmStyle.width = width + px;
+	if (height) elmStyle.height = height + px;
+	if (top) elmStyle.top = top + px;
+	if (left) elmStyle.left = left + px;
+};
+
+Resizable.prototype.onDrop = function onDrop (dropEvent) {
 	this.elm.classList.remove('grabbed', 'resizing');
 	this.unbindMouseMove();
 	this.unbindMouseMove = null;
 	document.removeEventListener('mouseup', this.onDrop);
 
-	this.box = null;
 	const newBox = this.elm.getBoundingClientRect();
-	this.events.stopResize.forEach(cb => cb(ev, newBox));
+	this.events.stopResize.forEach(cb => cb(dropEvent, newBox));
 };
 
 Resizable.prototype.disable = function disable () {
