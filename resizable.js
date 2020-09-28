@@ -268,13 +268,13 @@ Resizable.prototype.initElm = function initElm (elm) {
 };
 
 Resizable.prototype.showGrips = function showGrips () {
-	this.forEachGrip((grip) => {
+	return this.forEachGrip((grip) => {
 		grip.style.opacity = '1';
 	});
 };
 
 Resizable.prototype.hideGrips = function hideGrips () {
-	this.forEachGrip((grip) => {
+	return this.forEachGrip((grip) => {
 		grip.style.opacity = '0';
 	});
 };
@@ -289,6 +289,8 @@ Resizable.prototype.forEachGrip = function forEachGrip (callback) {
 		callback(this.grips.bottomRight);
 		callback(this.grips.bottomLeft);
 	}
+
+	return this;
 };
 
 Resizable.prototype.on = function on (eventName, callback) {

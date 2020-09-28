@@ -1039,7 +1039,16 @@ describe('resizable', () => {
 		});
 
 		describe('.showGrips() / .hideGrips()', () => {
-			it.skip('toggles grips visibility');
+			it('toggles grips visibility', () => {
+				rsz = resizable(target);
+				const {topLeft} = rsz.grips;
+
+				expect(topLeft.style.opacity).to.equal('0');
+				rsz.showGrips();
+				expect(topLeft.style.opacity).to.equal('1');
+				rsz.hideGrips();
+				expect(topLeft.style.opacity).to.equal('0');
+			});
 		});
 	});
 
