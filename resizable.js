@@ -50,6 +50,12 @@ const gripsDefinitions = {
 		isCorner: false,
 		isXAxis: false,
 		isYAxis: true,
+		moveHandler (startBox, XDiff, YDiff) {
+			return {
+				height: calculateHeight(startBox.height, YDiff, this.minHeight),
+				top: calculateTop(startBox.top, this.minHeight, startBox.height, YDiff),
+			};
+		}
 	},
 
 	[direction.right]: {
@@ -60,6 +66,11 @@ const gripsDefinitions = {
 		isCorner: false,
 		isXAxis: true,
 		isYAxis: false,
+		moveHandler (startBox, XDiff) {
+			return {
+				width: calculateWidth(startBox.width, -XDiff, this.minWidth),
+			};
+		}
 	},
 
 	[direction.bottom]: {
@@ -70,6 +81,11 @@ const gripsDefinitions = {
 		isCorner: false,
 		isXAxis: false,
 		isYAxis: true,
+		moveHandler (startBox, XDiff, YDiff) {
+			return {
+				height: calculateHeight(startBox.height, -YDiff, this.minHeight),
+			};
+		}
 	},
 
 	[direction.left]: {
@@ -80,6 +96,12 @@ const gripsDefinitions = {
 		isCorner: false,
 		isXAxis: true,
 		isYAxis: false,
+		moveHandler (startBox, XDiff) {
+			return {
+				width: calculateWidth(startBox.width, XDiff, this.minWidth),
+				left: calculateLeft(startBox.left, this.minWidth, startBox.width, XDiff),
+			};
+		}
 	},
 
 	[direction.topLeft]: {

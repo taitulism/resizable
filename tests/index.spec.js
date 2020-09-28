@@ -910,66 +910,57 @@ describe('resizable', () => {
 			});
 		});
 
-		describe.skip('axis', () => {
-			it('restricts dragging along the X axis only', () => {
-				resizable(target, {axis: 'X'});
-				expect(target.style.left).to.be.empty;
-				expect(target.style.top).to.be.empty;
+		describe('direction', () => {
+			it('restricts resizing towards a single direction only (top)', () => {
+				const {grip} = resizable(target, {direction: 'top'});
 
-				simulateMouseDown(target, 50, 50);
-				simulateMouseMove(target, 50, 50);
+				simulateDragNDrop(grip, -50, -50);
+				const newBox = target.getBoundingClientRect();
 
-				expect(target.style.left).to.equal('0px');
-				expect(target.style.top).to.be.empty;
+				expect(newBox.width).to.equal(box.width);
+				expect(newBox.height).to.equal(box.height + 50);
 
-				simulateMouseMove(target, 150, 150);
-				expect(target.style.left).to.equal('100px');
-				expect(target.style.top).to.be.empty;
+				simulateDragNDrop(grip, 50, 50);
+				expect(target.getBoundingClientRect()).to.deep.equal(box);
 			});
 
-			it('restricts dragging along the Y axis only', () => {
-				resizable(target, {axis: 'Y'});
-				expect(target.style.left).to.be.empty;
-				expect(target.style.top).to.be.empty;
+			it('restricts resizing towards a single direction only (right)', () => {
+				const {grip} = resizable(target, {direction: 'right'});
 
-				simulateMouseDown(target, 50, 50);
-				simulateMouseMove(target, 50, 50);
+				simulateDragNDrop(grip, 50, 50);
+				const newBox = target.getBoundingClientRect();
 
-				expect(target.style.left).to.be.empty;
-				expect(target.style.top).to.equal('0px');
+				expect(newBox.width).to.equal(box.width + 50);
+				expect(newBox.height).to.equal(box.height);
 
-				simulateMouseMove(target, 150, 150);
-				expect(target.style.left).to.be.empty;
-				expect(target.style.top).to.equal('100px');
+				simulateDragNDrop(grip, -50, -50);
+				expect(target.getBoundingClientRect()).to.deep.equal(box);
 			});
 
-			it('opt:axis bug', () => {
+			it('restricts resizing towards a single direction only (bottom)', () => {
+				const {grip} = resizable(target, {direction: 'bottom'});
 
-				/*
-					When restricting to an axis, moving the mouse in the other
-					axis misses the mouseup event (mouse is outside of target).
-					The event is bound to target but the mouseup event occures outside.
-					Fixed by binding the mouseup to the document.
-					Test by keep moving the mouse after the drop and verify target is not moving.
-				*/
+				simulateDragNDrop(grip, 50, 50);
+				const newBox = target.getBoundingClientRect();
 
-				resizable(target, {axis: 'X'});
-				expect(target.style.left).to.be.empty;
-				expect(target.style.top).to.be.empty;
+				expect(newBox.width).to.equal(box.width);
+				expect(newBox.height).to.equal(box.height + 50);
 
-				simulateMouseDown(target, 50, 50);
-				simulateMouseMove(target, 50, 50);
+				simulateDragNDrop(grip, -50, -50);
+				expect(target.getBoundingClientRect()).to.deep.equal(box);
+			});
 
-				expect(target.style.left).to.equal('0px');
-				expect(target.style.top).to.be.empty;
+			it('restricts resizing towards a single direction only (left)', () => {
+				const {grip} = resizable(target, {direction: 'left'});
 
-				simulateMouseMove(target, 180, 180);
-				expect(target.style.left).to.equal('130px');
-				expect(target.style.top).to.be.empty;
+				simulateDragNDrop(grip, -50, -50);
+				const newBox = target.getBoundingClientRect();
 
-				simulateMouseUp(document, 180, 180);
-				simulateMouseMove(target, 400, 400);
-				expect(target.style.left).to.equal('130px');
+				expect(newBox.width).to.equal(box.width + 50);
+				expect(newBox.height).to.equal(box.height);
+
+				simulateDragNDrop(grip, 50, 50);
+				expect(target.getBoundingClientRect()).to.deep.equal(box);
 			});
 		});
 	});
@@ -1048,6 +1039,12 @@ describe('resizable', () => {
 				expect(topLeft.style.opacity).to.equal('1');
 				rsz.hideGrips();
 				expect(topLeft.style.opacity).to.equal('0');
+			});
+
+			it('is chainable', () => {
+				rsz = resizable(target);
+				expect(rsz.showGrips()).to.deep.equal(rsz);
+				expect(rsz.hideGrips()).to.deep.equal(rsz);
 			});
 		});
 	});

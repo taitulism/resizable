@@ -5,6 +5,7 @@ window.rsz = resizable(targetElm, {
 	gripSize: 16,
 	minWidth: 200,
 	minHeight: 200,
+	// direction: 'right',
 })
 .on('resizeStart', () => {
 	console.log('resizeStart');
