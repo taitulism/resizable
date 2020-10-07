@@ -4,10 +4,13 @@
    "version": "0.0.5",
    "license": "MIT",
    "browser": "./dist/resizable.browser.js",
-   "module": "./dist/resizable.esm-bundle.js",
+   "module": "./dist/resizable.esm.js",
    "author": "Taitu Lizenbaum <taitu.dev@gmail.com>",
    "homepage": "https://github.com/taitulism/resizable#readme",
    "repository": "github:taitulism/resizable",
+   "files": [
+      "dist"
+   ],
    "scripts": {
       "dev": "rollup --config rollup.dev.config.js --watch",
       "build": "rollup --config rollup.prod.config.js",
@@ -15,7 +18,8 @@
       "karma": "npm run test -- --no-single-run --auto-watch",
       "lint": "eslint ./resizable.js ./tests",
       "check": "npm run lint && npm test",
-      "play": "node ./playground/play.js",
+	  "play": "node ./playground/play.js",
+	  "prepare": "npm run build",
       "preversion": "npm run check",
       "postversion": "git push && git push --tags"
    },
