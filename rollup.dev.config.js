@@ -1,9 +1,15 @@
 export default [{
-	input: 'resizable.js',
+	input: 'index.js',
 	output: {
 		file: 'resizable-dev-bundle.js',
 		format: 'iife',
 		name: 'resizable',
-		sourcemap: 'inline',
+	},
+}, {
+	input: 'tests/index.spec.js',
+	output: {
+		file: 'resizable-spec-bundle.js',
+		format: 'iife',
+		name: 'resizable',
 	},
 }];
