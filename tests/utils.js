@@ -51,3 +51,13 @@ export function simulateDragNDrop (elm, moveX, moveY) {
 	simulateMouseMove(elm, moveX, moveY);
 	simulateMouseUp(elm, moveX, moveY);
 }
+
+export function createTarget () {
+	const target = document.createElement('div');
+	target.id = 'target';
+	target.style.width = '100px';
+	target.style.height = '100px';
+	target.style.backgroundColor = 'pink';
+
+	return target;
+}
