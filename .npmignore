@@ -1,5 +1,4 @@
 node_modules
 playground
-resizable-dev-bundle.js
-resizable-spec-bundle.js
+dev-bundles
 .vscode

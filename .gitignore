@@ -1,3 +1,3 @@
 node_modules
-resizable-dev-bundle.js
-resizable-spec-bundle.js
+dist
+dev-bundles

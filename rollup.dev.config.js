@@ -1,15 +1,14 @@
 export default [{
 	input: 'index.js',
 	output: {
-		file: 'resizable-dev-bundle.js',
+		file: 'dev-bundles/resizable.js',
 		format: 'iife',
 		name: 'resizable',
 	},
 }, {
 	input: 'tests/index.spec.js',
 	output: {
-		file: 'resizable-spec-bundle.js',
+		file: 'dev-bundles/resizable-spec.js',
 		format: 'iife',
-		name: 'resizable',
 	},
 }];

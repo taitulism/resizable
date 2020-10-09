@@ -1,24 +1,32 @@
 // import {terser} from 'rollup-plugin-terser';
 
 export default [{
-	input: 'resizable.js',
+	input: 'index.js',
 	output: {
 		file: 'dist/resizable.esm.js',
 		format: 'es',
 	},
 }, {
-	input: 'resizable.js',
+	input: 'index.js',
 	output: {
 		file: 'dist/resizable.browser.js',
 		format: 'iife',
 		name: 'resizable',
 	},
-// }, {
-// 	input: 'resizable.js',
-// 	plugins: [terser()],
-// 	output: {
-// 		file: 'dist/resizable.browser.min.js',
-// 		format: 'iife',
-// 		name: 'resizable',
-// 	},
 }];
+
+/*
+minify:
+-------
+	import {terser} from 'rollup-plugin-terser';
+
+	...
+
+	input: 'index.js',
+	plugins: [terser()],
+	output: {
+		file: 'dist/resizable.browser.min.js',
+		format: 'iife',
+		name: 'resizable',
+	},
+*/
