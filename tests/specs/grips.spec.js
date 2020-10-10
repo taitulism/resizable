@@ -1,4 +1,5 @@
 import {createTarget, simulateMouseEnter, simulateMouseLeave} from '../utils';
+import {RESIZE_GRIP} from '../../src/classnames';
 
 export default () => {
 	let testDOMContainer, target, box, rsz;
@@ -63,9 +64,9 @@ export default () => {
 	});
 
 	it('all grips have a `resize-grip` classname', () => {
-		expect(target.getElementsByClassName('resize-grip')).to.have.lengthOf(0);
+		expect(target.getElementsByClassName(RESIZE_GRIP)).to.have.lengthOf(0);
 		resizable(target);
-		expect(target.getElementsByClassName('resize-grip')).to.have.lengthOf(4);
+		expect(target.getElementsByClassName(RESIZE_GRIP)).to.have.lengthOf(4);
 	});
 
 	it('each grip has its own classname', () => {

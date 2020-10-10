@@ -2,6 +2,11 @@
 import getGripCreator from './get-grip-creator';
 import bindListener from './bind-listener';
 import {direction} from './grips-definitions';
+import {
+	RESIZABLE,
+	RESIZING,
+	RESIZE_DISABLED,
+} from './classnames';
 
 const px = 'px';
 
@@ -84,7 +89,7 @@ Resizable.prototype.initElm = function initElm (elm) {
 		elm.style.height = this.minHeight + px;
 	}
 
-	elm.classList.add('resizable');
+	elm.classList.add(RESIZABLE);
 };
 
 Resizable.prototype.showGrips = function showGrips () {
@@ -130,7 +135,7 @@ Resizable.prototype.on = function on (eventName, callback) {
 Resizable.prototype.onResizeStart = function onResizeStart (startEvent, moveHandler) {
 	if (!this.isResizable) return;
 
-	this.elm.classList.add('resizing');
+	this.elm.classList.add(RESIZING);
 
 	const startMouseX = startEvent.clientX;
 	const startMouseY = startEvent.clientY;
@@ -165,7 +170,7 @@ Resizable.prototype.updateElm = function updateElm ({width, height, top, left}) 
 };
 
 Resizable.prototype.onDrop = function onDrop (dropEvent) {
-	this.elm.classList.remove('resizing');
+	this.elm.classList.remove(RESIZING);
 	this.unbindMouseMove();
 	this.unbindMouseMove = null;
 	document.removeEventListener('mouseup', this.onDrop);
@@ -176,7 +181,7 @@ Resizable.prototype.onDrop = function onDrop (dropEvent) {
 
 Resizable.prototype.disable = function disable () {
 	this.isResizable = false;
-	this.elm.classList.add('resize-disabled');
+	this.elm.classList.add(RESIZE_DISABLED);
 	this.forEachGrip((grip) => {
 		grip.style.display = 'none';
 	});
@@ -185,7 +190,7 @@ Resizable.prototype.disable = function disable () {
 
 Resizable.prototype.enable = function enable () {
 	this.isResizable = true;
-	this.elm.classList.remove('resize-disabled');
+	this.elm.classList.remove(RESIZE_DISABLED);
 	this.forEachGrip((grip) => {
 		grip.style.display = '';
 	});

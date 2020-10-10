@@ -1,5 +1,6 @@
 /* eslint-disable indent, no-magic-numbers */
 import {gripsDefinitions} from './grips-definitions';
+import {RESIZE_GRIP} from './classnames';
 
 const px = 'px';
 
@@ -39,7 +40,7 @@ export default function getGripCreator (gripSize) {
 			gripStyle[position] = gripOffset;
 		}
 
-		grip.classList.add('resize-grip', gripClassname);
+		grip.classList.add(RESIZE_GRIP, gripClassname);
 
 		return {gripElm: grip, moveHandler, propName};
 	};
