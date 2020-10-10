@@ -59,8 +59,7 @@ Kills the `Resizable` instance for good, unbinds events, releases element refere
 ## ClassNames
 For styling, the main element will be given the following classes:
 * `'resizable'` - from initialization until destruction.
-* `'grabbed'` - on mouse down, until mouse up.
-* `'resizing'` - when moving the element until mouse up.
+* `'resizing'` - on mouse down on a resize grip, until mouse up.
 
 &nbsp;
 
