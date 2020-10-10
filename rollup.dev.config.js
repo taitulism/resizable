@@ -6,7 +6,7 @@ export default [{
 		name: 'resizable',
 	},
 }, {
-	input: 'tests/index.spec.js',
+	input: 'tests/specs/index.spec.js',
 	output: {
 		file: 'dev-bundles/resizable-spec.js',
 		format: 'iife',
