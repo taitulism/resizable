@@ -36,11 +36,11 @@ Resizable.prototype.initGrips = function initGrips (gripSize, gripDirection) {
 	const createGrip = getGripCreator(gripSize || 10);
 
 	if (gripDirection) {
-		const {elm, moveHandler} = createGrip(direction[gripDirection]);
-		this.grip = elm;
-		this.elm.appendChild(elm);
+		const {gripElm, moveHandler} = createGrip(direction[gripDirection]);
+		this.grip = gripElm;
+		this.elm.appendChild(gripElm);
 
-		const unbind = bindListener(elm, 'mousedown', (ev) => {
+		const unbind = bindListener(gripElm, 'mousedown', (ev) => {
 			this.onResizeStart(ev, moveHandler);
 		});
 
@@ -53,11 +53,11 @@ Resizable.prototype.initGrips = function initGrips (gripSize, gripDirection) {
 			direction.bottomRight,
 			direction.bottomLeft,
 		].forEach((gripDir) => {
-			const {propName, elm, moveHandler} = createGrip(gripDir);
-			this.grips[propName] = elm;
-			this.elm.appendChild(elm);
+			const {propName, gripElm, moveHandler} = createGrip(gripDir);
+			this.grips[propName] = gripElm;
+			this.elm.appendChild(gripElm);
 
-			const unbind = bindListener(elm, 'mousedown', (ev) => {
+			const unbind = bindListener(gripElm, 'mousedown', (ev) => {
 				this.onResizeStart(ev, moveHandler);
 			});
 
@@ -130,11 +130,11 @@ Resizable.prototype.on = function on (eventName, callback) {
 Resizable.prototype.onResizeStart = function onResizeStart (startEvent, moveHandler) {
 	if (!this.isResizable) return;
 
+	this.elm.classList.add('resizing');
+
 	const startMouseX = startEvent.clientX;
 	const startMouseY = startEvent.clientY;
-
 	const startBox = this.elm.getBoundingClientRect();
-	this.elm.classList.add('grabbed');
 
 	this.unbindMouseMove && this.unbindMouseMove();
 	this.unbindMouseMove = bindListener(document, 'mousemove', (moveEvent) => {
@@ -143,7 +143,6 @@ Resizable.prototype.onResizeStart = function onResizeStart (startEvent, moveHand
 
 		const newBox = moveHandler.call(this, startBox, XDiff, YDiff);
 		this.updateElm(newBox);
-		this.elm.classList.add('resizing');
 		this.events.resizing.forEach(cb => cb(moveEvent, {
 			width: newBox.width,
 			height: newBox.height,
@@ -166,7 +165,7 @@ Resizable.prototype.updateElm = function updateElm ({width, height, top, left}) 
 };
 
 Resizable.prototype.onDrop = function onDrop (dropEvent) {
-	this.elm.classList.remove('grabbed', 'resizing');
+	this.elm.classList.remove('resizing');
 	this.unbindMouseMove();
 	this.unbindMouseMove = null;
 	document.removeEventListener('mouseup', this.onDrop);

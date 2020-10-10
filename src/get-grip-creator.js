@@ -41,6 +41,6 @@ export default function getGripCreator (gripSize) {
 
 		grip.classList.add('resize-grip', gripClassname);
 
-		return {elm: grip, moveHandler, propName};
+		return {gripElm: grip, moveHandler, propName};
 	};
 }

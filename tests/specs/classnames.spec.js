@@ -25,26 +25,13 @@ export default () => {
 		expect(target.classList.contains('resizable')).to.be.true;
 	});
 
-	it('sets a `grabbed` classname on the element when grabbing a grip', () => {
-		rsz = resizable(target);
-		const {bottomRight} = rsz.grips;
-
-		expect(target.classList.contains('grabbed')).to.be.false;
-		simulateMouseDown(bottomRight, box.x, box.y);
-		expect(target.classList.contains('grabbed')).to.be.true;
-		simulateMouseMove(bottomRight, box.x - 50, box.y - 50);
-		expect(target.classList.contains('grabbed')).to.be.true;
-		simulateMouseUp(bottomRight, box.x - 50, box.y - 50);
-		expect(target.classList.contains('grabbed')).to.be.false;
-	});
-
 	it('sets a `resizing` classname on the element when moving a grip', () => {
 		rsz = resizable(target);
 		const {topLeft} = rsz.grips;
 
 		expect(target.classList.contains('resizing')).to.be.false;
 		simulateMouseDown(topLeft, box.x, box.y);
-		expect(target.classList.contains('resizing')).to.be.false;
+		expect(target.classList.contains('resizing')).to.be.true;
 		simulateMouseMove(topLeft, box.x - 50, box.y - 50);
 		expect(target.classList.contains('resizing')).to.be.true;
 		simulateMouseUp(topLeft, box.x - 50, box.y - 50);
