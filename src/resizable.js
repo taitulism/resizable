@@ -143,7 +143,7 @@ Resizable.prototype.onResizeStart = function onResizeStart (startEvent, moveHand
 
 		const newBox = moveHandler.call(this, startBox, XDiff, YDiff);
 		this.updateElm(newBox);
-		this.elm.classList.replace('grabbed', 'resizing');
+		this.elm.classList.add('resizing');
 		this.events.resizing.forEach(cb => cb(moveEvent, {
 			width: newBox.width,
 			height: newBox.height,
