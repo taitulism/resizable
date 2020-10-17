@@ -8,6 +8,10 @@ import {
 	RESIZE_DISABLED,
 } from './classnames';
 
+const MOUSE_DOWN = 'mousedown';
+const MOUSE_MOVE = 'mousemove';
+const MOUSE_UP = 'mouseup';
+
 const px = 'px';
 
 export default function Resizable (elm, opts = {}) {
@@ -18,6 +22,7 @@ export default function Resizable (elm, opts = {}) {
 	this.originalPosition = elm.style.position || null;
 	this.destructionQueue = [];
 	this.unbindMouseMove = null;
+	this.classname = opts.classname || RESIZABLE;
 	this.grip = null;
 	this.grips = {};
 
@@ -45,7 +50,7 @@ Resizable.prototype.initGrips = function initGrips (gripSize, gripDirection) {
 		this.grip = gripElm;
 		this.elm.appendChild(gripElm);
 
-		const unbind = bindListener(gripElm, 'mousedown', (ev) => {
+		const unbind = bindListener(gripElm, MOUSE_DOWN, (ev) => {
 			this.onResizeStart(ev, moveHandler);
 		});
 
@@ -62,7 +67,7 @@ Resizable.prototype.initGrips = function initGrips (gripSize, gripDirection) {
 			this.grips[propName] = gripElm;
 			this.elm.appendChild(gripElm);
 
-			const unbind = bindListener(gripElm, 'mousedown', (ev) => {
+			const unbind = bindListener(gripElm, MOUSE_DOWN, (ev) => {
 				this.onResizeStart(ev, moveHandler);
 			});
 
@@ -89,7 +94,7 @@ Resizable.prototype.initElm = function initElm (elm) {
 		elm.style.height = this.minHeight + px;
 	}
 
-	elm.classList.add(RESIZABLE);
+	elm.classList.add(this.classname);
 };
 
 Resizable.prototype.showGrips = function showGrips () {
@@ -142,7 +147,7 @@ Resizable.prototype.onResizeStart = function onResizeStart (startEvent, moveHand
 	const startBox = this.elm.getBoundingClientRect();
 
 	this.unbindMouseMove && this.unbindMouseMove();
-	this.unbindMouseMove = bindListener(document, 'mousemove', (moveEvent) => {
+	this.unbindMouseMove = bindListener(document, MOUSE_MOVE, (moveEvent) => {
 		const XDiff = moveEvent.clientX - startMouseX;
 		const YDiff = moveEvent.clientY - startMouseY;
 
@@ -156,7 +161,7 @@ Resizable.prototype.onResizeStart = function onResizeStart (startEvent, moveHand
 		moveEvent.preventDefault();
 	});
 
-	document.addEventListener('mouseup', this.onDrop);
+	document.addEventListener(MOUSE_UP, this.onDrop);
 	this.events.startResize.forEach(cb => cb(startEvent));
 };
 
@@ -173,7 +178,7 @@ Resizable.prototype.onDrop = function onDrop (dropEvent) {
 	this.elm.classList.remove(RESIZING);
 	this.unbindMouseMove();
 	this.unbindMouseMove = null;
-	document.removeEventListener('mouseup', this.onDrop);
+	document.removeEventListener(MOUSE_UP, this.onDrop);
 
 	const newBox = this.elm.getBoundingClientRect();
 	this.events.stopResize.forEach(cb => cb(dropEvent, newBox));
@@ -200,7 +205,7 @@ Resizable.prototype.enable = function enable () {
 Resizable.prototype.destroy = function destroy () {
 	this.destroyGrips();
 
-	this.elm.classList.remove('resizable', 'resizing');
+	this.elm.classList.remove(this.classname, RESIZING);
 	if (this.originalPosition) {
 		this.elm.style.position = this.originalPosition;
 	}

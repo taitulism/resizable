@@ -1,4 +1,5 @@
 import {createTarget, simulateMouseEnter, simulateDragNDrop} from '../utils';
+import { RESIZABLE } from '../../src/classnames';
 
 export default () => {
 	let testDOMContainer, target, box, rsz;
@@ -18,6 +19,14 @@ export default () => {
 		target.parentNode.removeChild(target);
 		target = null;
 		box = null;
+	});
+
+	describe('classname', () => {
+		it('sets a prefix to the `resizable` classname', () => {
+			resizable(target, {classname: 'my-class'});
+			expect(target.classList.contains('my-class')).to.be.true;
+			expect(target.classList.contains(RESIZABLE)).to.be.false;
+		});
 	});
 
 	describe('minWidth', () => {

@@ -15,6 +15,7 @@ resizable(myElm, {options});
 
 ## Options
 
+* **`classname`** - String. A replacement for the `resizable` classname.
 * `minWidth` - Number. Limits the element minimum width.
 * `minHeight` - Number. Limits the element minimum height.
 * `gripSize` - Number. Sets the resizing grips size.
